@@ -1,1 +1,513 @@
 
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>成人肥胖臨床評估與治療表單</title>
+  <style>
+    :root {
+      --border: #222;
+      --soft: #666;
+      --bg: #f7f7f7;
+      --section: #efefef;
+      --accent: #1f4e79;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      color: #111;
+      background: white;
+      line-height: 1.45;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      padding: 10mm 12mm 14mm;
+      background: white;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      text-align: center;
+      font-size: 24px;
+      letter-spacing: 1px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 12px;
+      color: var(--soft);
+      margin-bottom: 10px;
+    }
+
+    .meta-grid,
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+      display: grid;
+      gap: 8px;
+    }
+
+    .meta-grid { grid-template-columns: repeat(4, 1fr); }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+    .section {
+      border: 1.4px solid var(--border);
+      margin-top: 10px;
+    }
+
+    .section-title {
+      background: var(--section);
+      border-bottom: 1.4px solid var(--border);
+      padding: 6px 8px;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .section-body {
+      padding: 8px;
+    }
+
+    .field {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 28px;
+      flex-wrap: wrap;
+    }
+
+    .label {
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .line {
+      display: inline-block;
+      border-bottom: 1px solid #000;
+      min-width: 70px;
+      height: 20px;
+      vertical-align: bottom;
+    }
+
+    .line.sm { min-width: 44px; }
+    .line.md { min-width: 90px; }
+    .line.lg { min-width: 150px; }
+    .line.xl { min-width: 240px; }
+    .line.full { width: 100%; min-width: 100%; }
+
+    .check-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      margin-top: 4px;
+    }
+
+    .check {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .box {
+      width: 15px;
+      height: 15px;
+      border: 1.5px solid #000;
+      display: inline-block;
+      vertical-align: middle;
+      flex: 0 0 15px;
+    }
+
+    .subsection {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px dashed #999;
+    }
+
+    .subsection:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .sub-title {
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    th, td {
+      border: 1px solid #000;
+      padding: 6px;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f2f2f2;
+      text-align: left;
+    }
+
+    .tiny {
+      font-size: 11px;
+      color: #444;
+    }
+
+    .notes {
+      min-height: 88px;
+      border: 1px solid #000;
+      padding: 6px;
+      margin-top: 6px;
+    }
+
+    .footer {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #444;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    @media print {
+      body { background: white; }
+      .page { margin: 0; width: auto; min-height: auto; }
+    }
+
+    @media screen {
+      body { background: var(--bg); padding: 20px 0; }
+      .page { box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>成人肥胖臨床評估與治療表單</h1>
+    <div class="subtitle">門診初診 / 複診勾選式表單（可列印使用）</div>
+
+    <div class="section">
+      <div class="section-title">一、基本資料</div>
+      <div class="section-body meta-grid">
+        <div class="field"><span class="label">姓名</span><span class="line md"></span></div>
+        <div class="field"><span class="label">病歷號</span><span class="line md"></span></div>
+        <div class="field"><span class="label">日期</span><span class="line md"></span></div>
+        <div class="field"><span class="label">醫師</span><span class="line md"></span></div>
+        <div class="field"><span class="label">年齡</span><span class="line sm"></span></div>
+        <div class="field"><span class="label">性別</span>
+          <span class="check"><span class="box"></span>男</span>
+          <span class="check"><span class="box"></span>女</span>
+        </div>
+        <div class="field"><span class="label">初/複診</span>
+          <span class="check"><span class="box"></span>初診</span>
+          <span class="check"><span class="box"></span>複診</span>
+        </div>
+        <div class="field"><span class="label">轉介來源</span><span class="line md"></span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">二、人體測量與肥胖分級</div>
+      <div class="section-body">
+        <div class="grid-4">
+          <div class="field"><span class="label">身高</span><span class="line sm"></span>cm</div>
+          <div class="field"><span class="label">體重</span><span class="line sm"></span>kg</div>
+          <div class="field"><span class="label">BMI</span><span class="line sm"></span>kg/m²</div>
+          <div class="field"><span class="label">腰圍</span><span class="line sm"></span>cm</div>
+        </div>
+
+        <div class="subsection">
+          <div class="sub-title">BMI 分類（台灣成人）</div>
+          <div class="check-row">
+            <span class="check"><span class="box"></span>&lt; 18.5 體重過輕</span>
+            <span class="check"><span class="box"></span>18.5–23.9 正常</span>
+            <span class="check"><span class="box"></span>24.0–26.9 過重</span>
+            <span class="check"><span class="box"></span>27.0–29.9 肥胖</span>
+            <span class="check"><span class="box"></span>30.0–34.9 中度肥胖</span>
+            <span class="check"><span class="box"></span>35.0–39.9 重度肥胖</span>
+            <span class="check"><span class="box"></span>≥ 40 病態性肥胖</span>
+          </div>
+        </div>
+
+        <div class="subsection grid-2">
+          <div>
+            <div class="sub-title">腹部肥胖</div>
+            <div class="check-row">
+              <span class="check"><span class="box"></span>男 ≥ 90 cm</span>
+              <span class="check"><span class="box"></span>女 ≥ 80 cm</span>
+              <span class="check"><span class="box"></span>未達腹部肥胖</span>
+            </div>
+          </div>
+          <div>
+            <div class="sub-title">近期體重變化</div>
+            <div class="check-row">
+              <span class="check"><span class="box"></span>3 個月內增加 ≥ 5%</span>
+              <span class="check"><span class="box"></span>3 個月內減少 ≥ 5%</span>
+              <span class="check"><span class="box"></span>穩定</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">三、肥胖相關病史與次級原因評估</div>
+      <div class="section-body">
+        <div class="subsection">
+          <div class="sub-title">相關共病（可複選）</div>
+          <div class="check-row">
+            <span class="check"><span class="box"></span>第二型糖尿病 / 前期糖尿病</span>
+            <span class="check"><span class="box"></span>高血壓</span>
+            <span class="check"><span class="box"></span>高血脂</span>
+            <span class="check"><span class="box"></span>冠心病 / ASCVD</span>
+            <span class="check"><span class="box"></span>NAFLD / MASLD</span>
+            <span class="check"><span class="box"></span>高尿酸 / 痛風</span>
+            <span class="check"><span class="box"></span>睡眠呼吸中止症</span>
+            <span class="check"><span class="box"></span>骨關節炎</span>
+            <span class="check"><span class="box"></span>PCOS</span>
+            <span class="check"><span class="box"></span>GERD</span>
+            <span class="check"><span class="box"></span>憂鬱 / 焦慮</span>
+            <span class="check"><span class="box"></span>其他：<span class="line md"></span></span>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="sub-title">可能造成體重增加之因素</div>
+          <div class="check-row">
+            <span class="check"><span class="box"></span>家族史</span>
+            <span class="check"><span class="box"></span>久坐工作</span>
+            <span class="check"><span class="box"></span>睡眠不足</span>
+            <span class="check"><span class="box"></span>輪班</span>
+            <span class="check"><span class="box"></span>壓力大</span>
+            <span class="check"><span class="box"></span>情緒性進食</span>
+            <span class="check"><span class="box"></span>酒精攝取</span>
+            <span class="check"><span class="box"></span>停菸後體重增加</span>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="sub-title">次級肥胖 / 藥物相關評估</div>
+          <div class="check-row">
+            <span class="check"><span class="box"></span>疑甲狀腺低下</span>
+            <span class="check"><span class="box"></span>疑庫欣症候群</span>
+            <span class="check"><span class="box"></span>疑下視丘 / 內分泌異常</span>
+            <span class="check"><span class="box"></span>抗精神病藥物</span>
+            <span class="check"><span class="box"></span>抗憂鬱藥物</span>
+            <span class="check"><span class="box"></span>類固醇</span>
+            <span class="check"><span class="box"></span>胰島素 / 促泌劑</span>
+            <span class="check"><span class="box"></span>其他致胖藥物</span>
+            <span class="check"><span class="box"></span>未見明顯次級因素</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">四、生活型態與行為評估</div>
+      <div class="section-body grid-2">
+        <div>
+          <div class="sub-title">飲食型態</div>
+          <div class="check-row">
+            <span class="check"><span class="box"></span>外食為主</span>
+            <span class="check"><span class="box"></span>含糖飲料</span>
+            <span class="check"><span class="box"></span>精緻澱粉偏多</span>
+            <span class="check"><span class="box"></span>高脂飲食</span>
+            <span class="check"><span class="box"></span>份量過大</span>
+            <span class="check"><span class="box"></span>宵夜習慣</span>
+            <span class="check"><span class="box"></span>進食不規律</span>
+            <span class="check"><span class="box"></span>暴食傾向</span>
+          </div>
+          <div class="field" style="margin-top:8px;"><span class="label">每日餐次/加餐重點</span><span class="line xl"></span></div>
+        </div>
+
+        <div>
+          <div class="sub-title">身體活動與睡眠</div>
+          <div class="check-row">
+            <span class="check"><span class="box"></span>幾乎無運動</span>
+            <span class="check"><span class="box"></span>&lt; 150 分鐘/週</span>
+            <span class="check"><span class="box"></span>≥ 150 分鐘/週</span>
+            <span class="check"><span class="box"></span>有阻力訓練</span>
+            <span class="check"><span class="box"></span>每日久坐 &gt; 8 小時</span>
+            <span class="check"><span class="box"></span>睡眠 &lt; 6 小時</span>
+            <span class="check"><span class="box"></span>打鼾 / 嗜睡</span>
+          </div>
+          <div class="field" style="margin-top:8px;"><span class="label">運動類型</span><span class="line lg"></span></div>
+        </div>
+
+        <div>
+          <div class="sub-title">減重歷史</div>
+          <div class="check-row">
+            <span class="check"><span class="box"></span>曾自行減重</span>
+            <span class="check"><span class="box"></span>曾營養諮詢</span>
+            <span class="check"><span class="box"></span>曾使用藥物</span>
+            <span class="check"><span class="box"></span>停藥後復胖</span>
+            <span class="check"><span class="box"></span>曾接受手術/內視鏡減重</span>
+          </div>
+          <div class="field" style="margin-top:8px;"><span class="label">過去最成功減重</span><span class="line sm"></span>kg</div>
+        </div>
+
+        <div>
+          <div class="sub-title">動機與可行性</div>
+          <div class="check-row">
+            <span class="check"><span class="box"></span>減重動機高</span>
+            <span class="check"><span class="box"></span>可配合飲食紀錄</span>
+            <span class="check"><span class="box"></span>可固定追蹤</span>
+            <span class="check"><span class="box"></span>需家屬支持</span>
+            <span class="check"><span class="box"></span>經濟考量</span>
+            <span class="check"><span class="box"></span>可能依從性不佳</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">五、檢查與代謝風險</div>
+      <div class="section-body">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:22%;">項目</th>
+              <th style="width:18%;">結果</th>
+              <th style="width:18%;">異常</th>
+              <th>備註</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>血壓</td><td></td><td><span class="box"></span></td><td></td></tr>
+            <tr><td>空腹血糖 / HbA1c</td><td></td><td><span class="box"></span></td><td></td></tr>
+            <tr><td>總膽固醇 / LDL / HDL / TG</td><td></td><td><span class="box"></span></td><td></td></tr>
+            <tr><td>AST / ALT</td><td></td><td><span class="box"></span></td><td></td></tr>
+            <tr><td>肌酸酐 / eGFR</td><td></td><td><span class="box"></span></td><td></td></tr>
+            <tr><td>尿酸</td><td></td><td><span class="box"></span></td><td></td></tr>
+            <tr><td>TSH（必要時）</td><td></td><td><span class="box"></span></td><td></td></tr>
+            <tr><td>其他</td><td></td><td><span class="box"></span></td><td></td></tr>
+          </tbody>
+        </table>
+        <div class="tiny" style="margin-top:6px;">可依臨床情況加做：睡眠檢查、肝臟超音波、妊娠評估、精神/飲食疾患評估。</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">六、治療分級與處置決策</div>
+      <div class="section-body">
+        <div class="sub-title">治療適應症判定</div>
+        <div class="check-row">
+          <span class="check"><span class="box"></span>BMI 24–26.9：加強生活型態介入</span>
+          <span class="check"><span class="box"></span>BMI ≥ 27：肥胖治療評估</span>
+          <span class="check"><span class="box"></span>BMI ≥ 27 且有共病：可考慮藥物治療</span>
+          <span class="check"><span class="box"></span>BMI ≥ 30：可考慮藥物治療</span>
+          <span class="check"><span class="box"></span>BMI ≥ 32 或 BMI ≥ 27 且嚴重共病：評估手術/內視鏡</span>
+        </div>
+
+        <div class="subsection grid-3">
+          <div>
+            <div class="sub-title">A. 生活型態處方</div>
+            <div class="check-row">
+              <span class="check"><span class="box"></span>熱量赤字 500–750 kcal/day</span>
+              <span class="check"><span class="box"></span>高蛋白飲食</span>
+              <span class="check"><span class="box"></span>低醣飲食</span>
+              <span class="check"><span class="box"></span>地中海飲食</span>
+              <span class="check"><span class="box"></span>減糖飲食</span>
+              <span class="check"><span class="box"></span>轉營養師</span>
+              <span class="check"><span class="box"></span>每週運動 150–300 分鐘</span>
+              <span class="check"><span class="box"></span>阻力訓練 2–3 次/週</span>
+              <span class="check"><span class="box"></span>自我監測 / 飲食紀錄</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="sub-title">B. 藥物治療</div>
+            <div class="check-row">
+              <span class="check"><span class="box"></span>暫不使用</span>
+              <span class="check"><span class="box"></span>可考慮 GLP-1 RA / GIP-GLP-1</span>
+              <span class="check"><span class="box"></span>Orlistat</span>
+              <span class="check"><span class="box"></span>其他：<span class="line sm"></span></span>
+              <span class="check"><span class="box"></span>已說明停藥可能復胖</span>
+              <span class="check"><span class="box"></span>已評估禁忌症/副作用</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="sub-title">C. 手術/內視鏡</div>
+            <div class="check-row">
+              <span class="check"><span class="box"></span>目前不需要</span>
+              <span class="check"><span class="box"></span>評估減重手術</span>
+              <span class="check"><span class="box"></span>轉介外科</span>
+              <span class="check"><span class="box"></span>評估內視鏡減重</span>
+              <span class="check"><span class="box"></span>已衛教風險/效益</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">七、個別化治療目標</div>
+      <div class="section-body grid-2">
+        <div>
+          <div class="check-row">
+            <span class="check"><span class="box"></span>3–6 個月減重 5%</span>
+            <span class="check"><span class="box"></span>3–6 個月減重 10%</span>
+            <span class="check"><span class="box"></span>維持體重不再上升</span>
+            <span class="check"><span class="box"></span>改善血糖</span>
+            <span class="check"><span class="box"></span>改善血壓</span>
+            <span class="check"><span class="box"></span>改善血脂</span>
+            <span class="check"><span class="box"></span>改善睡眠 / OSA</span>
+            <span class="check"><span class="box"></span>改善脂肪肝</span>
+          </div>
+        </div>
+        <div>
+          <div class="field"><span class="label">短期目標</span><span class="line full"></span></div>
+          <div class="field" style="margin-top:8px;"><span class="label">長期目標</span><span class="line full"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">八、追蹤計畫與醫囑</div>
+      <div class="section-body">
+        <div class="grid-3">
+          <div class="check-row">
+            <span class="check"><span class="box"></span>2–4 週追蹤</span>
+            <span class="check"><span class="box"></span>1 個月追蹤</span>
+            <span class="check"><span class="box"></span>3 個月追蹤</span>
+          </div>
+          <div class="check-row">
+            <span class="check"><span class="box"></span>追蹤體重/BMI/腰圍</span>
+            <span class="check"><span class="box"></span>檢視飲食紀錄</span>
+            <span class="check"><span class="box"></span>評估藥物療效與副作用</span>
+          </div>
+          <div class="check-row">
+            <span class="check"><span class="box"></span>轉營養師</span>
+            <span class="check"><span class="box"></span>轉運動/復健</span>
+            <span class="check"><span class="box"></span>轉心理/身心科</span>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="sub-title">醫師備註</div>
+          <div class="notes"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div>簽名：____________________</div>
+      <div>版本：門診列印版 v1.0</div>
+    </div>
+  </div>
+</body>
+</html>
