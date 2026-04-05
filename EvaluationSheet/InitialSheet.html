@@ -107,6 +107,31 @@
       const body = buildEmailBody();
       const mailto = `mailto:${encodeURIComponent(to)}?cc=${encodeURIComponent(cc)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       window.location.href = mailto;
+      setTimeout(() => {
+        const msg = document.getElementById('submitStatus');
+        if (msg) {
+          msg.textContent = '送出完成';
+          msg.style.display = 'inline-block';
+        }
+      }, 500);
+    }
+
+    function updateBmiCategory(bmi) {
+      const boxes = document.querySelectorAll('#bmiGroup input[type="checkbox"]');
+      boxes.forEach(cb => { cb.checked = false; });
+      if (!Number.isFinite(bmi) || bmi <= 0) return;
+
+      let target = null;
+      if (bmi < 18.5) target = 'bmiUnder';
+      else if (bmi < 24) target = 'bmiNormal';
+      else if (bmi < 27) target = 'bmiOver';
+      else if (bmi < 30) target = 'bmiObese1';
+      else if (bmi < 35) target = 'bmiObese2';
+      else if (bmi < 40) target = 'bmiObese3';
+      else target = 'bmiObese4';
+
+      const el = document.getElementById(target);
+      if (el) el.checked = true;
     }
 
     function calculateBMI() {
@@ -117,6 +142,10 @@
       if (h > 0 && w > 0) {
         const bmi = w / Math.pow(h / 100, 2);
         bmiEl.value = bmi.toFixed(1);
+        updateBmiCategory(bmi);
+      } else {
+        bmiEl.value = '';
+        updateBmiCategory(NaN);
       }
     }
 
@@ -233,25 +262,20 @@
     .input-lg { width: 220px; }
     .input-xl { width: 100%; }
 
-    .toolbar {
+    .submit-wrap {
+      margin-top: 16px;
       display: flex;
+      align-items: center;
       justify-content: flex-end;
       gap: 10px;
-      margin-bottom: 10px;
+      flex-wrap: wrap;
     }
 
-    .btn {
-      border: 1px solid #000;
-      background: #fff;
-      padding: 8px 14px;
+    .status-msg {
+      display: none;
       font-size: 14px;
-      cursor: pointer;
-    }
-
-    .btn.primary {
-      background: #1f4e79;
-      color: #fff;
-      border-color: #1f4e79;
+      font-weight: 700;
+      color: #1f4e79;
     }
 
     .email-hint {
@@ -373,10 +397,7 @@
 </head>
 <body>
   <div class="page">
-    <div class="toolbar">
-      <button type="button" class="btn" onclick="window.print()">列印表單</button>
-      <button type="button" class="btn primary" onclick="submitByEmail()">送出資料</button>
-    </div>
+    
     <h1>成人肥胖臨床評估與治療表單</h1>
     <div class="subtitle">門診初診 / 複診勾選式表單（可列印使用）</div>
 
@@ -413,13 +434,13 @@
         <div class="subsection">
           <div class="sub-title">BMI 分類（台灣成人）</div>
           <div class="check-row" id="bmiGroup">
-            <label class="check"><input type="checkbox" data-label="< 18.5 體重過輕" />&lt; 18.5 體重過輕</label>
-            <label class="check"><input type="checkbox" data-label="18.5–23.9 正常" />18.5–23.9 正常</label>
-            <label class="check"><input type="checkbox" data-label="24.0–26.9 過重" />24.0–26.9 過重</label>
-            <label class="check"><input type="checkbox" data-label="27.0–29.9 肥胖" />27.0–29.9 肥胖</label>
-            <label class="check"><input type="checkbox" data-label="30.0–34.9 中度肥胖" />30.0–34.9 中度肥胖</label>
-            <label class="check"><input type="checkbox" data-label="35.0–39.9 重度肥胖" />35.0–39.9 重度肥胖</label>
-            <label class="check"><input type="checkbox" data-label="≥ 40 病態性肥胖" />≥ 40 病態性肥胖</label>
+            <label class="check"><input id="bmiUnder" type="checkbox" data-label="< 18.5 體重過輕" />&lt; 18.5 體重過輕</label>
+            <label class="check"><input id="bmiNormal" type="checkbox" data-label="18.5–23.9 正常" />18.5–23.9 正常</label>
+            <label class="check"><input id="bmiOver" type="checkbox" data-label="24.0–26.9 過重" />24.0–26.9 過重</label>
+            <label class="check"><input id="bmiObese1" type="checkbox" data-label="27.0–29.9 肥胖" />27.0–29.9 肥胖</label>
+            <label class="check"><input id="bmiObese2" type="checkbox" data-label="30.0–34.9 中度肥胖" />30.0–34.9 中度肥胖</label>
+            <label class="check"><input id="bmiObese3" type="checkbox" data-label="35.0–39.9 重度肥胖" />35.0–39.9 重度肥胖</label>
+            <label class="check"><input id="bmiObese4" type="checkbox" data-label="≥ 40 病態性肥胖" />≥ 40 病態性肥胖</label>
           </div>
         </div>
 
@@ -545,6 +566,12 @@
           <div class="email-hint">按下「送出資料」後，會開啟預設郵件程式，收件者預設為 jimmy603@ms3.hinet.net，副本為 edmaster@cgmh.org.tw、cgmhim@cgmh.org.tw。</div>
         </div>
       </div>
+    </div>
+
+    <div class="submit-wrap">
+      <button type="button" class="btn" onclick="window.print()">列印表單</button>
+      <button type="button" class="btn primary" onclick="submitByEmail()">送出資料</button>
+      <span id="submitStatus" class="status-msg">送出完成</span>
     </div>
 
     <div class="footer">
