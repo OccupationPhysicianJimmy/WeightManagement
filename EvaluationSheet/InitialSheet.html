@@ -1,10 +1,132 @@
-
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>成人肥胖臨床評估與治療表單</title>
+  <script>
+    function getCheckedLabels(container) {
+      return Array.from(container.querySelectorAll('input[type="checkbox"]:checked'))
+        .map(cb => cb.dataset.label || cb.value || cb.name || '已勾選')
+        .filter(Boolean);
+    }
+
+    function getTextValue(id) {
+      const el = document.getElementById(id);
+      return el ? (el.value || '').trim() : '';
+    }
+
+    function buildEmailBody() {
+      const lines = [];
+      const add = (label, value = '') => {
+        lines.push(label + (value ? '：' + value : ''));
+      };
+
+      add('【成人肥胖臨床評估與治療表單】');
+      add('');
+      add('一、基本資料');
+      add('姓名', getTextValue('patientName'));
+      add('病歷號', getTextValue('chartNo'));
+      add('日期', getTextValue('visitDate'));
+      add('醫師', getTextValue('doctorName'));
+      add('年齡', getTextValue('age'));
+      add('性別', getCheckedLabels(document.getElementById('genderGroup')).join('、'));
+      add('就診別', getCheckedLabels(document.getElementById('visitTypeGroup')).join('、'));
+      add('轉介來源', getTextValue('referralSource'));
+      add('');
+
+      add('二、人體測量');
+      add('身高(cm)', getTextValue('height'));
+      add('體重(kg)', getTextValue('weight'));
+      add('BMI', getTextValue('bmi'));
+      add('腰圍(cm)', getTextValue('waist'));
+      add('BMI分類', getCheckedLabels(document.getElementById('bmiGroup')).join('、'));
+      add('腹部肥胖', getCheckedLabels(document.getElementById('waistGroup')).join('、'));
+      add('近期體重變化', getCheckedLabels(document.getElementById('weightChangeGroup')).join('、'));
+      add('');
+
+      add('三、病史與次級原因');
+      add('相關共病', getCheckedLabels(document.getElementById('comorbidityGroup')).join('、'));
+      add('其他共病', getTextValue('otherComorbidity'));
+      add('體重增加因素', getCheckedLabels(document.getElementById('weightFactorGroup')).join('、'));
+      add('次級肥胖/藥物評估', getCheckedLabels(document.getElementById('secondaryGroup')).join('、'));
+      add('');
+
+      add('四、生活型態');
+      add('飲食型態', getCheckedLabels(document.getElementById('dietGroup')).join('、'));
+      add('每日餐次/加餐重點', getTextValue('mealPattern'));
+      add('活動與睡眠', getCheckedLabels(document.getElementById('activityGroup')).join('、'));
+      add('運動類型', getTextValue('exerciseType'));
+      add('減重歷史', getCheckedLabels(document.getElementById('historyGroup')).join('、'));
+      add('過去最成功減重(kg)', getTextValue('bestLoss'));
+      add('動機與可行性', getCheckedLabels(document.getElementById('motivationGroup')).join('、'));
+      add('');
+
+      add('五、檢查與代謝風險');
+      add('血壓', getTextValue('bp'));
+      add('空腹血糖/HbA1c', getTextValue('sugar'));
+      add('血脂', getTextValue('lipid'));
+      add('AST/ALT', getTextValue('lft'));
+      add('Cr/eGFR', getTextValue('renal'));
+      add('尿酸', getTextValue('uric'));
+      add('TSH', getTextValue('tsh'));
+      add('其他檢查', getTextValue('otherLab'));
+      add('');
+
+      add('六、治療分級與處置');
+      add('治療適應症', getCheckedLabels(document.getElementById('indicationGroup')).join('、'));
+      add('生活型態處方', getCheckedLabels(document.getElementById('lifestyleRxGroup')).join('、'));
+      add('藥物治療', getCheckedLabels(document.getElementById('medGroup')).join('、'));
+      add('其他藥物', getTextValue('otherMed'));
+      add('手術/內視鏡', getCheckedLabels(document.getElementById('procedureGroup')).join('、'));
+      add('');
+
+      add('七、治療目標');
+      add('目標', getCheckedLabels(document.getElementById('goalGroup')).join('、'));
+      add('短期目標', getTextValue('shortGoal'));
+      add('長期目標', getTextValue('longGoal'));
+      add('');
+
+      add('八、追蹤計畫');
+      add('追蹤頻率', getCheckedLabels(document.getElementById('followupGroup')).join('、'));
+      add('追蹤內容', getCheckedLabels(document.getElementById('monitorGroup')).join('、'));
+      add('轉介', getCheckedLabels(document.getElementById('referralGroup')).join('、'));
+      add('醫師備註', getTextValue('note'));
+      add('');
+      add('簽名', getTextValue('signature'));
+
+      return lines.join('
+');
+    }
+
+    function submitByEmail() {
+      const to = 'jimmy603@ms3.hinet.net';
+      const cc = 'edmaster@cgmh.org.tw,cgmhim@cgmh.org.tw';
+      const patientName = getTextValue('patientName') || '未命名個案';
+      const subject = '成人肥胖臨床評估與治療表單 - ' + patientName;
+      const body = buildEmailBody();
+      const mailto = `mailto:${encodeURIComponent(to)}?cc=${encodeURIComponent(cc)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      window.location.href = mailto;
+    }
+
+    function calculateBMI() {
+      const h = parseFloat(getTextValue('height'));
+      const w = parseFloat(getTextValue('weight'));
+      const bmiEl = document.getElementById('bmi');
+      if (!bmiEl) return;
+      if (h > 0 && w > 0) {
+        const bmi = w / Math.pow(h / 100, 2);
+        bmiEl.value = bmi.toFixed(1);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const heightEl = document.getElementById('height');
+      const weightEl = document.getElementById('weight');
+      if (heightEl) heightEl.addEventListener('input', calculateBMI);
+      if (weightEl) weightEl.addEventListener('input', calculateBMI);
+    });
+  </script>
   <style>
     :root {
       --border: #222;
@@ -81,6 +203,61 @@
       gap: 6px;
       min-height: 28px;
       flex-wrap: wrap;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="number"],
+    textarea {
+      border: 1px solid #000;
+      padding: 4px 6px;
+      font-size: 13px;
+      font-family: inherit;
+      background: #fff;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="number"] {
+      height: 28px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .input-sm { width: 72px; }
+    .input-md { width: 140px; }
+    .input-lg { width: 220px; }
+    .input-xl { width: 100%; }
+
+    .toolbar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      border: 1px solid #000;
+      background: #fff;
+      padding: 8px 14px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      background: #1f4e79;
+      color: #fff;
+      border-color: #1f4e79;
+    }
+
+    .email-hint {
+      font-size: 11px;
+      color: #444;
+      margin-top: 4px;
     }
 
     .label {
@@ -196,26 +373,30 @@
 </head>
 <body>
   <div class="page">
+    <div class="toolbar">
+      <button type="button" class="btn" onclick="window.print()">列印表單</button>
+      <button type="button" class="btn primary" onclick="submitByEmail()">送出資料</button>
+    </div>
     <h1>成人肥胖臨床評估與治療表單</h1>
     <div class="subtitle">門診初診 / 複診勾選式表單（可列印使用）</div>
 
     <div class="section">
       <div class="section-title">一、基本資料</div>
       <div class="section-body meta-grid">
-        <div class="field"><span class="label">姓名</span><span class="line md"></span></div>
-        <div class="field"><span class="label">病歷號</span><span class="line md"></span></div>
-        <div class="field"><span class="label">日期</span><span class="line md"></span></div>
-        <div class="field"><span class="label">醫師</span><span class="line md"></span></div>
-        <div class="field"><span class="label">年齡</span><span class="line sm"></span></div>
-        <div class="field"><span class="label">性別</span>
-          <span class="check"><span class="box"></span>男</span>
-          <span class="check"><span class="box"></span>女</span>
+        <div class="field"><span class="label">姓名</span><input id="patientName" type="text" class="input-md" /></div>
+        <div class="field"><span class="label">病歷號</span><input id="chartNo" type="text" class="input-md" /></div>
+        <div class="field"><span class="label">日期</span><input id="visitDate" type="date" class="input-md" /></div>
+        <div class="field"><span class="label">醫師</span><input id="doctorName" type="text" class="input-md" /></div>
+        <div class="field"><span class="label">年齡</span><input id="age" type="number" class="input-sm" /></div>
+        <div class="field" id="genderGroup"><span class="label">性別</span>
+          <label class="check"><input type="checkbox" data-label="男" />男</label>
+          <label class="check"><input type="checkbox" data-label="女" />女</label>
         </div>
-        <div class="field"><span class="label">初/複診</span>
-          <span class="check"><span class="box"></span>初診</span>
-          <span class="check"><span class="box"></span>複診</span>
+        <div class="field" id="visitTypeGroup"><span class="label">初/複診</span>
+          <label class="check"><input type="checkbox" data-label="初診" />初診</label>
+          <label class="check"><input type="checkbox" data-label="複診" />複診</label>
         </div>
-        <div class="field"><span class="label">轉介來源</span><span class="line md"></span></div>
+        <div class="field"><span class="label">轉介來源</span><input id="referralSource" type="text" class="input-md" /></div>
       </div>
     </div>
 
@@ -223,40 +404,40 @@
       <div class="section-title">二、人體測量與肥胖分級</div>
       <div class="section-body">
         <div class="grid-4">
-          <div class="field"><span class="label">身高</span><span class="line sm"></span>cm</div>
-          <div class="field"><span class="label">體重</span><span class="line sm"></span>kg</div>
-          <div class="field"><span class="label">BMI</span><span class="line sm"></span>kg/m²</div>
-          <div class="field"><span class="label">腰圍</span><span class="line sm"></span>cm</div>
+          <div class="field"><span class="label">身高</span><input id="height" type="number" step="0.1" class="input-sm" />cm</div>
+          <div class="field"><span class="label">體重</span><input id="weight" type="number" step="0.1" class="input-sm" />kg</div>
+          <div class="field"><span class="label">BMI</span><input id="bmi" type="number" step="0.1" class="input-sm" />kg/m²</div>
+          <div class="field"><span class="label">腰圍</span><input id="waist" type="number" step="0.1" class="input-sm" />cm</div>
         </div>
 
         <div class="subsection">
           <div class="sub-title">BMI 分類（台灣成人）</div>
-          <div class="check-row">
-            <span class="check"><span class="box"></span>&lt; 18.5 體重過輕</span>
-            <span class="check"><span class="box"></span>18.5–23.9 正常</span>
-            <span class="check"><span class="box"></span>24.0–26.9 過重</span>
-            <span class="check"><span class="box"></span>27.0–29.9 肥胖</span>
-            <span class="check"><span class="box"></span>30.0–34.9 中度肥胖</span>
-            <span class="check"><span class="box"></span>35.0–39.9 重度肥胖</span>
-            <span class="check"><span class="box"></span>≥ 40 病態性肥胖</span>
+          <div class="check-row" id="bmiGroup">
+            <label class="check"><input type="checkbox" data-label="< 18.5 體重過輕" />&lt; 18.5 體重過輕</label>
+            <label class="check"><input type="checkbox" data-label="18.5–23.9 正常" />18.5–23.9 正常</label>
+            <label class="check"><input type="checkbox" data-label="24.0–26.9 過重" />24.0–26.9 過重</label>
+            <label class="check"><input type="checkbox" data-label="27.0–29.9 肥胖" />27.0–29.9 肥胖</label>
+            <label class="check"><input type="checkbox" data-label="30.0–34.9 中度肥胖" />30.0–34.9 中度肥胖</label>
+            <label class="check"><input type="checkbox" data-label="35.0–39.9 重度肥胖" />35.0–39.9 重度肥胖</label>
+            <label class="check"><input type="checkbox" data-label="≥ 40 病態性肥胖" />≥ 40 病態性肥胖</label>
           </div>
         </div>
 
         <div class="subsection grid-2">
           <div>
             <div class="sub-title">腹部肥胖</div>
-            <div class="check-row">
-              <span class="check"><span class="box"></span>男 ≥ 90 cm</span>
-              <span class="check"><span class="box"></span>女 ≥ 80 cm</span>
-              <span class="check"><span class="box"></span>未達腹部肥胖</span>
+            <div class="check-row" id="waistGroup">
+              <label class="check"><input type="checkbox" data-label="男 ≥ 90 cm" />男 ≥ 90 cm</label>
+              <label class="check"><input type="checkbox" data-label="女 ≥ 80 cm" />女 ≥ 80 cm</label>
+              <label class="check"><input type="checkbox" data-label="未達腹部肥胖" />未達腹部肥胖</label>
             </div>
           </div>
           <div>
             <div class="sub-title">近期體重變化</div>
-            <div class="check-row">
-              <span class="check"><span class="box"></span>3 個月內增加 ≥ 5%</span>
-              <span class="check"><span class="box"></span>3 個月內減少 ≥ 5%</span>
-              <span class="check"><span class="box"></span>穩定</span>
+            <div class="check-row" id="weightChangeGroup">
+              <label class="check"><input type="checkbox" data-label="3 個月內增加 ≥ 5%" />3 個月內增加 ≥ 5%</label>
+              <label class="check"><input type="checkbox" data-label="3 個月內減少 ≥ 5%" />3 個月內減少 ≥ 5%</label>
+              <label class="check"><input type="checkbox" data-label="穩定" />穩定</label>
             </div>
           </div>
         </div>
@@ -268,48 +449,48 @@
       <div class="section-body">
         <div class="subsection">
           <div class="sub-title">相關共病（可複選）</div>
-          <div class="check-row">
-            <span class="check"><span class="box"></span>第二型糖尿病 / 前期糖尿病</span>
-            <span class="check"><span class="box"></span>高血壓</span>
-            <span class="check"><span class="box"></span>高血脂</span>
-            <span class="check"><span class="box"></span>冠心病 / ASCVD</span>
-            <span class="check"><span class="box"></span>NAFLD / MASLD</span>
-            <span class="check"><span class="box"></span>高尿酸 / 痛風</span>
-            <span class="check"><span class="box"></span>睡眠呼吸中止症</span>
-            <span class="check"><span class="box"></span>骨關節炎</span>
-            <span class="check"><span class="box"></span>PCOS</span>
-            <span class="check"><span class="box"></span>GERD</span>
-            <span class="check"><span class="box"></span>憂鬱 / 焦慮</span>
-            <span class="check"><span class="box"></span>其他：<span class="line md"></span></span>
+          <div class="check-row" id="comorbidityGroup">
+            <label class="check"><input type="checkbox" data-label="第二型糖尿病 / 前期糖尿病" />第二型糖尿病 / 前期糖尿病</label>
+            <label class="check"><input type="checkbox" data-label="高血壓" />高血壓</label>
+            <label class="check"><input type="checkbox" data-label="高血脂" />高血脂</label>
+            <label class="check"><input type="checkbox" data-label="冠心病 / ASCVD" />冠心病 / ASCVD</label>
+            <label class="check"><input type="checkbox" data-label="NAFLD / MASLD" />NAFLD / MASLD</label>
+            <label class="check"><input type="checkbox" data-label="高尿酸 / 痛風" />高尿酸 / 痛風</label>
+            <label class="check"><input type="checkbox" data-label="睡眠呼吸中止症" />睡眠呼吸中止症</label>
+            <label class="check"><input type="checkbox" data-label="骨關節炎" />骨關節炎</label>
+            <label class="check"><input type="checkbox" data-label="PCOS" />PCOS</label>
+            <label class="check"><input type="checkbox" data-label="GERD" />GERD</label>
+            <label class="check"><input type="checkbox" data-label="憂鬱 / 焦慮" />憂鬱 / 焦慮</label>
+            <span class="check">其他：<input id="otherComorbidity" type="text" class="input-md" /></span>
           </div>
         </div>
 
         <div class="subsection">
           <div class="sub-title">可能造成體重增加之因素</div>
-          <div class="check-row">
-            <span class="check"><span class="box"></span>家族史</span>
-            <span class="check"><span class="box"></span>久坐工作</span>
-            <span class="check"><span class="box"></span>睡眠不足</span>
-            <span class="check"><span class="box"></span>輪班</span>
-            <span class="check"><span class="box"></span>壓力大</span>
-            <span class="check"><span class="box"></span>情緒性進食</span>
-            <span class="check"><span class="box"></span>酒精攝取</span>
-            <span class="check"><span class="box"></span>停菸後體重增加</span>
+          <div class="check-row" id="weightFactorGroup">
+            <label class="check"><input type="checkbox" data-label="家族史" />家族史</label>
+            <label class="check"><input type="checkbox" data-label="久坐工作" />久坐工作</label>
+            <label class="check"><input type="checkbox" data-label="睡眠不足" />睡眠不足</label>
+            <label class="check"><input type="checkbox" data-label="輪班" />輪班</label>
+            <label class="check"><input type="checkbox" data-label="壓力大" />壓力大</label>
+            <label class="check"><input type="checkbox" data-label="情緒性進食" />情緒性進食</label>
+            <label class="check"><input type="checkbox" data-label="酒精攝取" />酒精攝取</label>
+            <label class="check"><input type="checkbox" data-label="停菸後體重增加" />停菸後體重增加</label>
           </div>
         </div>
 
         <div class="subsection">
           <div class="sub-title">次級肥胖 / 藥物相關評估</div>
-          <div class="check-row">
-            <span class="check"><span class="box"></span>疑甲狀腺低下</span>
-            <span class="check"><span class="box"></span>疑庫欣症候群</span>
-            <span class="check"><span class="box"></span>疑下視丘 / 內分泌異常</span>
-            <span class="check"><span class="box"></span>抗精神病藥物</span>
-            <span class="check"><span class="box"></span>抗憂鬱藥物</span>
-            <span class="check"><span class="box"></span>類固醇</span>
-            <span class="check"><span class="box"></span>胰島素 / 促泌劑</span>
-            <span class="check"><span class="box"></span>其他致胖藥物</span>
-            <span class="check"><span class="box"></span>未見明顯次級因素</span>
+          <div class="check-row" id="secondaryGroup">
+            <label class="check"><input type="checkbox" data-label="疑甲狀腺低下" />疑甲狀腺低下</label>
+            <label class="check"><input type="checkbox" data-label="疑庫欣症候群" />疑庫欣症候群</label>
+            <label class="check"><input type="checkbox" data-label="疑下視丘 / 內分泌異常" />疑下視丘 / 內分泌異常</label>
+            <label class="check"><input type="checkbox" data-label="抗精神病藥物" />抗精神病藥物</label>
+            <label class="check"><input type="checkbox" data-label="抗憂鬱藥物" />抗憂鬱藥物</label>
+            <label class="check"><input type="checkbox" data-label="類固醇" />類固醇</label>
+            <label class="check"><input type="checkbox" data-label="胰島素 / 促泌劑" />胰島素 / 促泌劑</label>
+            <label class="check"><input type="checkbox" data-label="其他致胖藥物" />其他致胖藥物</label>
+            <label class="check"><input type="checkbox" data-label="未見明顯次級因素" />未見明顯次級因素</label>
           </div>
         </div>
       </div>
@@ -319,159 +500,20 @@
       <div class="section-title">四、生活型態與行為評估</div>
       <div class="section-body grid-2">
         <div>
-          <div class="sub-title">飲食型態</div>
-          <div class="check-row">
-            <span class="check"><span class="box"></span>外食為主</span>
-            <span class="check"><span class="box"></span>含糖飲料</span>
-            <span class="check"><span class="box"></span>精緻澱粉偏多</span>
-            <span class="check"><span class="box"></span>高脂飲食</span>
-            <span class="check"><span class="box"></span>份量過大</span>
-            <span class="check"><span class="box"></span>宵夜習慣</span>
-            <span class="check"><span class="box"></span>進食不規律</span>
-            <span class="check"><span class="box"></span>暴食傾向</span>
-          </div>
-          <div class="field" style="margin-top:8px;"><span class="label">每日餐次/加餐重點</span><span class="line xl"></span></div>
-        </div>
-
-        <div>
-          <div class="sub-title">身體活動與睡眠</div>
-          <div class="check-row">
-            <span class="check"><span class="box"></span>幾乎無運動</span>
-            <span class="check"><span class="box"></span>&lt; 150 分鐘/週</span>
-            <span class="check"><span class="box"></span>≥ 150 分鐘/週</span>
-            <span class="check"><span class="box"></span>有阻力訓練</span>
-            <span class="check"><span class="box"></span>每日久坐 &gt; 8 小時</span>
-            <span class="check"><span class="box"></span>睡眠 &lt; 6 小時</span>
-            <span class="check"><span class="box"></span>打鼾 / 嗜睡</span>
-          </div>
-          <div class="field" style="margin-top:8px;"><span class="label">運動類型</span><span class="line lg"></span></div>
-        </div>
-
-        <div>
-          <div class="sub-title">減重歷史</div>
-          <div class="check-row">
-            <span class="check"><span class="box"></span>曾自行減重</span>
-            <span class="check"><span class="box"></span>曾營養諮詢</span>
-            <span class="check"><span class="box"></span>曾使用藥物</span>
-            <span class="check"><span class="box"></span>停藥後復胖</span>
-            <span class="check"><span class="box"></span>曾接受手術/內視鏡減重</span>
-          </div>
-          <div class="field" style="margin-top:8px;"><span class="label">過去最成功減重</span><span class="line sm"></span>kg</div>
-        </div>
-
-        <div>
-          <div class="sub-title">動機與可行性</div>
-          <div class="check-row">
-            <span class="check"><span class="box"></span>減重動機高</span>
-            <span class="check"><span class="box"></span>可配合飲食紀錄</span>
-            <span class="check"><span class="box"></span>可固定追蹤</span>
-            <span class="check"><span class="box"></span>需家屬支持</span>
-            <span class="check"><span class="box"></span>經濟考量</span>
-            <span class="check"><span class="box"></span>可能依從性不佳</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">五、檢查與代謝風險</div>
-      <div class="section-body">
-        <table>
-          <thead>
-            <tr>
-              <th style="width:22%;">項目</th>
-              <th style="width:18%;">結果</th>
-              <th style="width:18%;">異常</th>
-              <th>備註</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>血壓</td><td></td><td><span class="box"></span></td><td></td></tr>
-            <tr><td>空腹血糖 / HbA1c</td><td></td><td><span class="box"></span></td><td></td></tr>
-            <tr><td>總膽固醇 / LDL / HDL / TG</td><td></td><td><span class="box"></span></td><td></td></tr>
-            <tr><td>AST / ALT</td><td></td><td><span class="box"></span></td><td></td></tr>
-            <tr><td>肌酸酐 / eGFR</td><td></td><td><span class="box"></span></td><td></td></tr>
-            <tr><td>尿酸</td><td></td><td><span class="box"></span></td><td></td></tr>
-            <tr><td>TSH（必要時）</td><td></td><td><span class="box"></span></td><td></td></tr>
-            <tr><td>其他</td><td></td><td><span class="box"></span></td><td></td></tr>
-          </tbody>
-        </table>
-        <div class="tiny" style="margin-top:6px;">可依臨床情況加做：睡眠檢查、肝臟超音波、妊娠評估、精神/飲食疾患評估。</div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">六、治療分級與處置決策</div>
-      <div class="section-body">
-        <div class="sub-title">治療適應症判定</div>
-        <div class="check-row">
-          <span class="check"><span class="box"></span>BMI 24–26.9：加強生活型態介入</span>
-          <span class="check"><span class="box"></span>BMI ≥ 27：肥胖治療評估</span>
-          <span class="check"><span class="box"></span>BMI ≥ 27 且有共病：可考慮藥物治療</span>
-          <span class="check"><span class="box"></span>BMI ≥ 30：可考慮藥物治療</span>
-          <span class="check"><span class="box"></span>BMI ≥ 32 或 BMI ≥ 27 且嚴重共病：評估手術/內視鏡</span>
-        </div>
-
-        <div class="subsection grid-3">
-          <div>
-            <div class="sub-title">A. 生活型態處方</div>
-            <div class="check-row">
-              <span class="check"><span class="box"></span>熱量赤字 500–750 kcal/day</span>
-              <span class="check"><span class="box"></span>高蛋白飲食</span>
-              <span class="check"><span class="box"></span>低醣飲食</span>
-              <span class="check"><span class="box"></span>地中海飲食</span>
-              <span class="check"><span class="box"></span>減糖飲食</span>
-              <span class="check"><span class="box"></span>轉營養師</span>
-              <span class="check"><span class="box"></span>每週運動 150–300 分鐘</span>
-              <span class="check"><span class="box"></span>阻力訓練 2–3 次/週</span>
-              <span class="check"><span class="box"></span>自我監測 / 飲食紀錄</span>
-            </div>
-          </div>
-
-          <div>
-            <div class="sub-title">B. 藥物治療</div>
-            <div class="check-row">
-              <span class="check"><span class="box"></span>暫不使用</span>
-              <span class="check"><span class="box"></span>可考慮 GLP-1 RA / GIP-GLP-1</span>
-              <span class="check"><span class="box"></span>Orlistat</span>
-              <span class="check"><span class="box"></span>其他：<span class="line sm"></span></span>
-              <span class="check"><span class="box"></span>已說明停藥可能復胖</span>
-              <span class="check"><span class="box"></span>已評估禁忌症/副作用</span>
-            </div>
-          </div>
-
-          <div>
-            <div class="sub-title">C. 手術/內視鏡</div>
-            <div class="check-row">
-              <span class="check"><span class="box"></span>目前不需要</span>
-              <span class="check"><span class="box"></span>評估減重手術</span>
-              <span class="check"><span class="box"></span>轉介外科</span>
-              <span class="check"><span class="box"></span>評估內視鏡減重</span>
-              <span class="check"><span class="box"></span>已衛教風險/效益</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="section-title">七、個別化治療目標</div>
-      <div class="section-body grid-2">
-        <div>
-          <div class="check-row">
-            <span class="check"><span class="box"></span>3–6 個月減重 5%</span>
-            <span class="check"><span class="box"></span>3–6 個月減重 10%</span>
-            <span class="check"><span class="box"></span>維持體重不再上升</span>
-            <span class="check"><span class="box"></span>改善血糖</span>
-            <span class="check"><span class="box"></span>改善血壓</span>
-            <span class="check"><span class="box"></span>改善血脂</span>
-            <span class="check"><span class="box"></span>改善睡眠 / OSA</span>
-            <span class="check"><span class="box"></span>改善脂肪肝</span>
+          <div class="check-row" id="goalGroup">
+            <label class="check"><input type="checkbox" data-label="3–6 個月減重 5%" />3–6 個月減重 5%</label>
+            <label class="check"><input type="checkbox" data-label="3–6 個月減重 10%" />3–6 個月減重 10%</label>
+            <label class="check"><input type="checkbox" data-label="維持體重不再上升" />維持體重不再上升</label>
+            <label class="check"><input type="checkbox" data-label="改善血糖" />改善血糖</label>
+            <label class="check"><input type="checkbox" data-label="改善血壓" />改善血壓</label>
+            <label class="check"><input type="checkbox" data-label="改善血脂" />改善血脂</label>
+            <label class="check"><input type="checkbox" data-label="改善睡眠 / OSA" />改善睡眠 / OSA</label>
+            <label class="check"><input type="checkbox" data-label="改善脂肪肝" />改善脂肪肝</label>
           </div>
         </div>
         <div>
-          <div class="field"><span class="label">短期目標</span><span class="line full"></span></div>
-          <div class="field" style="margin-top:8px;"><span class="label">長期目標</span><span class="line full"></span></div>
+          <div class="field"><span class="label">短期目標</span><input id="shortGoal" type="text" class="input-xl" /></div>
+          <div class="field" style="margin-top:8px;"><span class="label">長期目標</span><input id="longGoal" type="text" class="input-xl" /></div>
         </div>
       </div>
     </div>
@@ -480,32 +522,33 @@
       <div class="section-title">八、追蹤計畫與醫囑</div>
       <div class="section-body">
         <div class="grid-3">
-          <div class="check-row">
-            <span class="check"><span class="box"></span>2–4 週追蹤</span>
-            <span class="check"><span class="box"></span>1 個月追蹤</span>
-            <span class="check"><span class="box"></span>3 個月追蹤</span>
+          <div class="check-row" id="followupGroup">
+            <label class="check"><input type="checkbox" data-label="2–4 週追蹤" />2–4 週追蹤</label>
+            <label class="check"><input type="checkbox" data-label="1 個月追蹤" />1 個月追蹤</label>
+            <label class="check"><input type="checkbox" data-label="3 個月追蹤" />3 個月追蹤</label>
           </div>
-          <div class="check-row">
-            <span class="check"><span class="box"></span>追蹤體重/BMI/腰圍</span>
-            <span class="check"><span class="box"></span>檢視飲食紀錄</span>
-            <span class="check"><span class="box"></span>評估藥物療效與副作用</span>
+          <div class="check-row" id="monitorGroup">
+            <label class="check"><input type="checkbox" data-label="追蹤體重/BMI/腰圍" />追蹤體重/BMI/腰圍</label>
+            <label class="check"><input type="checkbox" data-label="檢視飲食紀錄" />檢視飲食紀錄</label>
+            <label class="check"><input type="checkbox" data-label="評估藥物療效與副作用" />評估藥物療效與副作用</label>
           </div>
-          <div class="check-row">
-            <span class="check"><span class="box"></span>轉營養師</span>
-            <span class="check"><span class="box"></span>轉運動/復健</span>
-            <span class="check"><span class="box"></span>轉心理/身心科</span>
+          <div class="check-row" id="referralGroup">
+            <label class="check"><input type="checkbox" data-label="轉營養師" />轉營養師</label>
+            <label class="check"><input type="checkbox" data-label="轉運動/復健" />轉運動/復健</label>
+            <label class="check"><input type="checkbox" data-label="轉心理/身心科" />轉心理/身心科</label>
           </div>
         </div>
 
         <div class="subsection">
           <div class="sub-title">醫師備註</div>
-          <div class="notes"></div>
+          <textarea id="note" placeholder="請輸入醫師備註"></textarea>
+          <div class="email-hint">按下「送出資料」後，會開啟預設郵件程式，收件者預設為 jimmy603@ms3.hinet.net，副本為 edmaster@cgmh.org.tw、cgmhim@cgmh.org.tw。</div>
         </div>
       </div>
     </div>
 
     <div class="footer">
-      <div>簽名：____________________</div>
+      <div>簽名：<input id="signature" type="text" class="input-md" /></div>
       <div>版本：門診列印版 v1.0</div>
     </div>
   </div>
