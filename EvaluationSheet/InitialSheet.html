@@ -5,6 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>成人肥胖臨床評估與治療表單</title>
   <script>
+    function copyToClipboard() {
+      const text = buildEmailBody();
+      navigator.clipboard.writeText(text).then(() => {
+        const msg = document.getElementById('submitStatus');
+        if (msg) {
+          msg.textContent = '已複製內容';
+          msg.style.display = 'inline-block';
+        }
+      });
+    }
+
     function getCheckedLabels(container) {
       return Array.from(container.querySelectorAll('input[type="checkbox"]:checked'))
         .map(cb => cb.dataset.label || cb.value || cb.name || '已勾選')
@@ -569,6 +580,7 @@
     </div>
 
     <div class="submit-wrap">
+      <button type="button" class="btn" onclick="copyToClipboard()">複製內容</button>
       <button type="button" class="btn" onclick="window.print()">列印表單</button>
       <button type="button" class="btn primary" onclick="submitByEmail()">送出資料</button>
       <span id="submitStatus" class="status-msg">送出完成</span>
