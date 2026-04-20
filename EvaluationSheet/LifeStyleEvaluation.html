@@ -1,1 +1,1262 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>生活型態評估問卷</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500&display=swap');
 
+:root {
+  --ink: #1c1c2e;
+  --warm: #2d1b4e;
+  --accent: #7c4dff;
+  --soft-accent: #ede9ff;
+  --muted: #7a7a9a;
+  --border: #e0ddf0;
+  --card-bg: #fafafa;
+  --correct: #00b894;
+  --warn: #e17055;
+  --sky: #0984e3;
+  --paper: #fff;
+  --section-a: #fff8f0;
+  --section-b: #f0f4ff;
+  --section-c: #f0fff8;
+  --section-d: #fff0f6;
+  --section-e: #fffaf0;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "Noto Sans TC", sans-serif;
+  background: #f4f2f9;
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+.shell {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 16px 60px;
+}
+
+/* Header */
+.page-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.tag-line {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.page-header h1 {
+  font-family: "Noto Serif TC", serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--warm);
+  line-height: 1.35;
+  margin-bottom: 8px;
+}
+
+.page-header p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+/* Progress */
+.progress-bar {
+  background: var(--border);
+  height: 4px;
+  border-radius: 2px;
+  margin-bottom: 32px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #b44dff);
+  border-radius: 2px;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+/* Section header */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--border);
+}
+
+.section-icon {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.section-header h2 {
+  font-family: "Noto Serif TC", serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--warm);
+}
+
+.section-header p {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+/* Card */
+.q-card {
+  background: var(--paper);
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  padding: 20px 22px;
+  margin-bottom: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.q-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 4px;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.q-card.answered::before { opacity: 1; }
+.q-card.answered { border-color: #c8b8ff; }
+
+.q-number {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.q-twist {
+  font-size: 11px;
+  color: var(--warn);
+  font-style: italic;
+  margin-bottom: 4px;
+}
+
+.q-text {
+  font-family: "Noto Serif TC", serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.55;
+  margin-bottom: 14px;
+}
+
+.q-hint {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 12px;
+  padding: 7px 10px;
+  background: #f8f7ff;
+  border-radius: 6px;
+  border-left: 3px solid #c8b8ff;
+}
+
+/* Options */
+.options { display: flex; flex-direction: column; gap: 7px; }
+
+.opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 13px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+  background: white;
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink);
+  line-height: 1.5;
+}
+
+.opt:hover {
+  border-color: var(--accent);
+  background: var(--soft-accent);
+}
+
+.opt.selected {
+  border-color: var(--accent);
+  background: #ede9ff;
+  color: var(--warm);
+  font-weight: 500;
+}
+
+.opt-mark {
+  width: 18px; height: 18px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.opt.selected .opt-mark {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.opt.selected .opt-mark::after {
+  content: '';
+  width: 6px; height: 6px;
+  background: white;
+  border-radius: 50%;
+}
+
+/* Multi-select variant */
+.opt.multi .opt-mark {
+  border-radius: 4px;
+}
+
+.opt.multi.selected .opt-mark::after {
+  content: '✓';
+  font-size: 10px;
+  color: white;
+  border-radius: 0;
+  width: auto; height: auto;
+  background: transparent;
+}
+
+/* Slider */
+.slider-wrap {
+  padding: 4px 0 8px;
+}
+
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.slider-value {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  font-family: "Noto Serif TC", serif;
+  color: var(--accent);
+  margin-top: 6px;
+}
+
+/* Text area */
+.q-textarea {
+  width: 100%;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: "Noto Sans TC", sans-serif;
+  font-size: 13px;
+  color: var(--ink);
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 0.2s;
+  background: white;
+}
+
+.q-textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Section wrapper */
+.section-block {
+  margin-bottom: 32px;
+  padding: 24px 0 0;
+}
+
+/* Reveal badge */
+.insight-badge {
+  display: none;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #2d4a2d;
+  background: #e8f5e9;
+  border: 1px solid #a5d6a7;
+  animation: fadeIn 0.4s ease;
+}
+
+.insight-badge.show { display: block; }
+.insight-badge strong { color: #1b5e20; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Summary panel */
+.summary-box {
+  background: var(--warm);
+  color: #e8e0ff;
+  border-radius: 14px;
+  padding: 24px;
+  margin-top: 32px;
+  display: none;
+}
+
+.summary-box.show { display: block; animation: fadeIn 0.5s ease; }
+
+.summary-box h3 {
+  font-family: "Noto Serif TC", serif;
+  font-size: 17px;
+  color: white;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sum-section { margin-bottom: 16px; }
+.sum-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #b39dff;
+  margin-bottom: 6px;
+}
+
+.sum-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.sum-tag {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 12px;
+  color: #ddd0ff;
+}
+
+.sum-tag.risk { background: rgba(225,112,85,0.25); border-color: rgba(225,112,85,0.5); color: #ffccc0; }
+.sum-tag.good { background: rgba(0,184,148,0.2); border-color: rgba(0,184,148,0.4); color: #aaffd8; }
+
+.sum-note { font-size: 12px; color: #c8b8ff; line-height: 1.7; margin-top: 4px; }
+
+/* Action buttons */
+.btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.btn-main {
+  background: linear-gradient(135deg, #7c4dff, #b44dff);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex: 1;
+}
+
+.btn-main:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(124,77,255,0.4); }
+
+.btn-sec {
+  background: rgba(255,255,255,0.1);
+  color: #c8b8ff;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-sec:hover { background: rgba(255,255,255,0.18); }
+
+.btn-submit {
+  background: white;
+  color: var(--warm);
+  border: none;
+  border-radius: 10px;
+  padding: 14px 28px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 20px;
+  width: 100%;
+  transition: all 0.2s;
+}
+
+.btn-submit:hover { background: #ede9ff; }
+
+/* Days grid */
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.day-btn {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  background: white;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.day-btn:hover { border-color: var(--accent); color: var(--accent); }
+.day-btn.on { background: var(--accent); border-color: var(--accent); color: white; }
+
+/* Emoji scale */
+.emoji-scale {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.em-opt {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+  background: white;
+  font-family: inherit;
+}
+
+.em-opt:hover { border-color: var(--accent); background: var(--soft-accent); }
+.em-opt.selected { border-color: var(--accent); background: #ede9ff; }
+.em-opt .em { font-size: 22px; }
+.em-opt .el { font-size: 10px; color: var(--muted); }
+
+@media (max-width: 500px) {
+  .page-header h1 { font-size: 20px; }
+  .q-text { font-size: 14px; }
+  .days-grid { gap: 4px; }
+  .emoji-scale { gap: 4px; }
+  .em-opt .em { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="page-header">
+    <div class="tag-line">生活型態評估</div>
+    <h1>讓我們換個方式聊聊<br>你的日常生活</h1>
+    <p>這份問卷不問「你做了什麼好事」，而是從另一個角度出發——有時候反向思考，能看見平時忽略的模式。</p>
+  </div>
+
+  <div class="progress-label">
+    <span id="progressText">0 / 20 題</span>
+    <span id="progressPct">0%</span>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+  <!-- ════ A. 飲食 ════ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="section-icon" style="background:#fff3e0">🍽️</div>
+      <div>
+        <h2>A．飲食行為</h2>
+        <p>反向詢問法・降低社會期許偏誤</p>
+      </div>
+    </div>
+
+    <!-- Q1 -->
+    <div class="q-card" id="q1">
+      <div class="q-number">Q 01</div>
+      <div class="q-twist">▸ 反向思考</div>
+      <div class="q-text">如果你想要在一個月內胖最多，<br>你「最可能」的吃法是？</div>
+      <div class="q-hint">💡 不用擔心「標準答案」——這題在找你生活中真實存在的飲食模式。</div>
+      <div class="options" id="q1-opts">
+        <button class="opt multi" onclick="toggleMulti(this,'q1','夜間大量進食')"><span class="opt-mark"></span>深夜猛吃、睡前一定要吃點東西</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q1','高糖飲料每日')"><span class="opt-mark"></span>每天一杯（以上）含糖飲料或手搖</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q1','高油炸外食')"><span class="opt-mark"></span>三餐幾乎外食，偏好炸物或重口味</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q1','壓力大時大吃')"><span class="opt-mark"></span>心情不好或壓力大就狂吃</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q1','不吃早餐補晚餐')"><span class="opt-mark"></span>早餐不吃，晚餐超大份補回來</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q1','邊看手機邊吃')"><span class="opt-mark"></span>吃飯一定配手機或電視，不知道吃了多少</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q1','以上都不是我')"><span class="opt-mark"></span>以上都不像我</button>
+      </div>
+      <div class="insight-badge" id="q1-insight"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q-card" id="q2">
+      <div class="q-number">Q 02</div>
+      <div class="q-twist">▸ 完美的「失敗日」</div>
+      <div class="q-text">請描述你上週「吃得最亂」的那一天，<br>大概是什麼情境？</div>
+      <div class="q-hint">💡 沒有對錯，這幫助我們了解你的飲食「破功點」在哪。</div>
+      <textarea class="q-textarea" id="q2-text" placeholder="例如：加班到晚上10點，便利商店買了兩個飯糰和一瓶拿鐵，回家又吃了泡麵……" oninput="textChanged('q2')"></textarea>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q-card" id="q3">
+      <div class="q-number">Q 03</div>
+      <div class="q-twist">▸ 假設實驗</div>
+      <div class="q-text">如果有人把你的廚房清空，<br>只留「你最常買的食物」，<br>那裡面會有什麼？</div>
+      <div class="options" id="q3-opts">
+        <button class="opt multi" onclick="toggleMulti(this,'q3','泡麵餅乾零食')"><span class="opt-mark"></span>泡麵、餅乾、洋芋片等即食零食</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q3','含糖飲料')"><span class="opt-mark"></span>含糖飲料、果汁、能量飲</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q3','冷凍食品')"><span class="opt-mark"></span>冷凍食品、微波食品</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q3','新鮮蔬菜水果')"><span class="opt-mark"></span>新鮮蔬菜、水果</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q3','蛋白質類')"><span class="opt-mark"></span>雞蛋、豆腐、肉類等蛋白質</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q3','幾乎沒在煮')"><span class="opt-mark"></span>我幾乎不開伙，廚房幾乎是空的</button>
+      </div>
+      <div class="insight-badge" id="q3-insight"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q-card" id="q4">
+      <div class="q-number">Q 04</div>
+      <div class="q-twist">▸ 時間盲點</div>
+      <div class="q-text">你每天第一口食物大概在幾點？<br>最後一口大概在幾點？</div>
+      <div class="q-hint">💡 進食窗口（eating window）影響代謝節律，不是在要求你「對」。</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px">
+        <div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">☀️ 第一口食物</div>
+          <div class="slider-wrap">
+            <div class="slider-labels"><span>4:00</span><span>12:00</span></div>
+            <input type="range" min="4" max="12" value="8" id="firstMeal" oninput="sliderUpdate('firstMeal','firstMealVal',v=>v+':00')">
+            <div class="slider-value" id="firstMealVal">8:00</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">🌙 最後一口食物</div>
+          <div class="slider-wrap">
+            <div class="slider-labels"><span>17:00</span><span>2:00</span></div>
+            <input type="range" min="17" max="26" value="21" id="lastMeal" oninput="sliderUpdate('lastMeal','lastMealVal',v=>v>=24?'0'+(v-24)+':00':v+':00')">
+            <div class="slider-value" id="lastMealVal">21:00</div>
+          </div>
+        </div>
+      </div>
+      <div class="insight-badge" id="q4-insight" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <!-- ════ B. 身體活動 ════ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="section-icon" style="background:#e8f5e9">🏃</div>
+      <div>
+        <h2>B．身體活動</h2>
+        <p>不問「你有沒有運動」，而問「你的身體在做什麼」</p>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="q-card" id="q5">
+      <div class="q-number">Q 05</div>
+      <div class="q-twist">▸ 反向設計</div>
+      <div class="q-text">如果你想讓自己一週內<br>消耗最少熱量，你會怎麼安排生活？</div>
+      <div class="options" id="q5-opts">
+        <button class="opt multi" onclick="toggleMulti(this,'q5','坐辦公室不動')"><span class="opt-mark"></span>整天坐辦公室，連廁所都搭電梯</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q5','外送不出門')"><span class="opt-mark"></span>叫外送不出門，週末整天躺平</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q5','搭車不走路')"><span class="opt-mark"></span>任何距離都搭車，拒絕步行</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q5','沒時間這樣')"><span class="opt-mark"></span>我的工作或生活不允許這樣</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q5','其實差不多')"><span class="opt-mark"></span>說真的，我現在的生活大概就這樣</button>
+      </div>
+      <div class="insight-badge" id="q5-insight"></div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="q-card" id="q6">
+      <div class="q-number">Q 06</div>
+      <div class="q-twist">▸ 行為地圖</div>
+      <div class="q-text">上週你「有在動」的是哪幾天？<br>（不限運動，走路、爬樓梯都算）</div>
+      <div class="days-grid" id="q6-days">
+        <button class="day-btn" onclick="toggleDay(this,'q6','一')">一</button>
+        <button class="day-btn" onclick="toggleDay(this,'q6','二')">二</button>
+        <button class="day-btn" onclick="toggleDay(this,'q6','三')">三</button>
+        <button class="day-btn" onclick="toggleDay(this,'q6','四')">四</button>
+        <button class="day-btn" onclick="toggleDay(this,'q6','五')">五</button>
+        <button class="day-btn" onclick="toggleDay(this,'q6','六')">六</button>
+        <button class="day-btn" onclick="toggleDay(this,'q6','日')">日</button>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:8px" id="q6-count">已選 0 天</div>
+      <div class="insight-badge" id="q6-insight"></div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="q-card" id="q7">
+      <div class="q-number">Q 07</div>
+      <div class="q-twist">▸ 身體訊號</div>
+      <div class="q-text">爬到三、四樓，你的感受是？</div>
+      <div class="emoji-scale" id="q7-scale">
+        <button class="em-opt" onclick="pickEmoji('q7',this,'完全沒感覺')"><span class="em">😌</span><span class="el">沒感覺</span></button>
+        <button class="em-opt" onclick="pickEmoji('q7',this,'微微喘')"><span class="em">🙂</span><span class="el">微微喘</span></button>
+        <button class="em-opt" onclick="pickEmoji('q7',this,'明顯喘氣')"><span class="em">😮‍💨</span><span class="el">明顯喘</span></button>
+        <button class="em-opt" onclick="pickEmoji('q7',this,'很喘需休息')"><span class="em">😤</span><span class="el">很喘</span></button>
+        <button class="em-opt" onclick="pickEmoji('q7',this,'避免爬樓梯')"><span class="em">🚫</span><span class="el">我避免爬</span></button>
+      </div>
+      <div class="insight-badge" id="q7-insight"></div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="q-card" id="q8">
+      <div class="q-number">Q 08</div>
+      <div class="q-twist">▸ 障礙優先</div>
+      <div class="q-text">你最常用來說服自己「今天不運動」的理由是？</div>
+      <div class="options" id="q8-opts">
+        <button class="opt" onclick="pickOpt(this,'q8','沒時間')"><span class="opt-mark"></span>沒時間（工作太忙、家事太多）</button>
+        <button class="opt" onclick="pickOpt(this,'q8','太累了')"><span class="opt-mark"></span>太累了，身體已經沒電</button>
+        <button class="opt" onclick="pickOpt(this,'q8','關節痛疼痛')"><span class="opt-mark"></span>關節痛、腰痛讓我不敢動</button>
+        <button class="opt" onclick="pickOpt(this,'q8','天氣不好')"><span class="opt-mark"></span>天氣不好、環境不方便</button>
+        <button class="opt" onclick="pickOpt(this,'q8','沒動力')"><span class="opt-mark"></span>就是沒動力，提不起勁</button>
+        <button class="opt" onclick="pickOpt(this,'q8','我有在運動')"><span class="opt-mark"></span>我其實有在固定運動</button>
+      </div>
+      <div class="insight-badge" id="q8-insight"></div>
+    </div>
+  </div>
+
+  <!-- ════ C. 睡眠與壓力 ════ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="section-icon" style="background:#e8eaf6">🌙</div>
+      <div>
+        <h2>C．睡眠與壓力</h2>
+        <p>體重的「隱形驅動力」——多數人沒想到的因素</p>
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="q-card" id="q9">
+      <div class="q-number">Q 09</div>
+      <div class="q-twist">▸ 倒推法</div>
+      <div class="q-text">你通常「幾點之後」才開始有睡意？<br>（不是你覺得應該睡的時間，是你真實會睡著的時間）</div>
+      <div class="options" id="q9-opts">
+        <button class="opt" onclick="pickOpt(this,'q9','22點前')"><span class="opt-mark"></span>晚上 10 點前（我是早睡型）</button>
+        <button class="opt" onclick="pickOpt(this,'q9','22-23點')"><span class="opt-mark"></span>晚上 10–11 點</button>
+        <button class="opt" onclick="pickOpt(this,'q9','23-24點')"><span class="opt-mark"></span>晚上 11 點–午夜 12 點</button>
+        <button class="opt" onclick="pickOpt(this,'q9','00-01點')"><span class="opt-mark"></span>午夜 12 點–凌晨 1 點</button>
+        <button class="opt" onclick="pickOpt(this,'q9','01點後')"><span class="opt-mark"></span>凌晨 1 點以後</button>
+      </div>
+      <div class="insight-badge" id="q9-insight"></div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="q-card" id="q10">
+      <div class="q-number">Q 10</div>
+      <div class="q-twist">▸ 誠實量表</div>
+      <div class="q-text">你上床到真正睡著，大概需要多久？</div>
+      <div class="emoji-scale" id="q10-scale">
+        <button class="em-opt" onclick="pickEmoji('q10',this,'5分鐘內')"><span class="em">💤</span><span class="el">5分鐘內</span></button>
+        <button class="em-opt" onclick="pickEmoji('q10',this,'5-15分鐘')"><span class="em">😴</span><span class="el">5–15分</span></button>
+        <button class="em-opt" onclick="pickEmoji('q10',this,'15-30分鐘')"><span class="em">🛌</span><span class="el">15–30分</span></button>
+        <button class="em-opt" onclick="pickEmoji('q10',this,'30-60分鐘')"><span class="em">😶</span><span class="el">30–60分</span></button>
+        <button class="em-opt" onclick="pickEmoji('q10',this,'超過一小時')"><span class="em">😩</span><span class="el">> 1小時</span></button>
+      </div>
+      <div class="insight-badge" id="q10-insight"></div>
+    </div>
+
+    <!-- Q11 -->
+    <div class="q-card" id="q11">
+      <div class="q-number">Q 11</div>
+      <div class="q-twist">▸ 壓力食物</div>
+      <div class="q-text">當你壓力最大的時候，<br>你的身體最想要什麼？</div>
+      <div class="options" id="q11-opts">
+        <button class="opt" onclick="pickOpt(this,'q11','甜食高糖')"><span class="opt-mark"></span>甜食、巧克力、蛋糕（渴望糖分）</button>
+        <button class="opt" onclick="pickOpt(this,'q11','鹹脆炸物')"><span class="opt-mark"></span>鹹的、炸的、脆的零食</button>
+        <button class="opt" onclick="pickOpt(this,'q11','大份量飯麵')"><span class="opt-mark"></span>大碗飯、麵，吃到撐才有安全感</button>
+        <button class="opt" onclick="pickOpt(this,'q11','完全不想吃')"><span class="opt-mark"></span>完全沒食慾，壓力大會忘記吃飯</button>
+        <button class="opt" onclick="pickOpt(this,'q11','喝酒')"><span class="opt-mark"></span>一杯（以上）酒</button>
+        <button class="opt" onclick="pickOpt(this,'q11','壓力不影響飲食')"><span class="opt-mark"></span>壓力對我的飲食影響不大</button>
+      </div>
+      <div class="insight-badge" id="q11-insight"></div>
+    </div>
+
+    <!-- Q12 -->
+    <div class="q-card" id="q12">
+      <div class="q-number">Q 12</div>
+      <div class="q-twist">▸ 體重歷史</div>
+      <div class="q-text">你的體重「感覺最重」的時期，<br>生活裡同時發生了什麼？</div>
+      <div class="options" id="q12-opts">
+        <button class="opt multi" onclick="toggleMulti(this,'q12','工作壓力爆炸')"><span class="opt-mark"></span>工作壓力最大、最忙的時候</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q12','情感事件')"><span class="opt-mark"></span>感情挫折、失戀、離婚</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q12','重大失落')"><span class="opt-mark"></span>喪親、重病等重大失落</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q12','生育後')"><span class="opt-mark"></span>生完孩子之後</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q12','換工作環境')"><span class="opt-mark"></span>換工作或生活環境變化</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q12','沒有特定事件')"><span class="opt-mark"></span>沒有特定事件，就這樣慢慢胖的</button>
+      </div>
+      <div class="insight-badge" id="q12-insight"></div>
+    </div>
+  </div>
+
+  <!-- ════ D. 動機與阻力 ════ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="section-icon" style="background:#fce4ec">💪</div>
+      <div>
+        <h2>D．動機、阻力與過去嘗試</h2>
+        <p>找出真正的「卡點」，而不只是紀錄失敗</p>
+      </div>
+    </div>
+
+    <!-- Q13 -->
+    <div class="q-card" id="q13">
+      <div class="q-number">Q 13</div>
+      <div class="q-twist">▸ 弔詭問句</div>
+      <div class="q-text">你曾經減掉最多的體重，<br>後來是怎麼回來的？</div>
+      <div class="options" id="q13-opts">
+        <button class="opt" onclick="pickOpt(this,'q13','從未成功減重')"><span class="opt-mark"></span>我從來沒有成功過（直接跳下題）</button>
+        <button class="opt" onclick="pickOpt(this,'q13','節食停止復胖')"><span class="opt-mark"></span>節食計畫結束，恢復正常吃就胖回來</button>
+        <button class="opt" onclick="pickOpt(this,'q13','壓力事件觸發')"><span class="opt-mark"></span>某個壓力事件發生後，飲食失控</button>
+        <button class="opt" onclick="pickOpt(this,'q13','受傷停止運動')"><span class="opt-mark"></span>受傷或生病，停止運動後慢慢回升</button>
+        <button class="opt" onclick="pickOpt(this,'q13','藥物副作用')"><span class="opt-mark"></span>服用某些藥物後體重上升</button>
+        <button class="opt" onclick="pickOpt(this,'q13','維持中')"><span class="opt-mark"></span>我目前還在維持中</button>
+      </div>
+      <div class="insight-badge" id="q13-insight"></div>
+    </div>
+
+    <!-- Q14 -->
+    <div class="q-card" id="q14">
+      <div class="q-number">Q 14</div>
+      <div class="q-twist">▸ 負面動機探索</div>
+      <div class="q-text">如果你今天決定「不減重了」，<br>你最鬆一口氣的是什麼？</div>
+      <div class="q-hint">💡 這個問題沒有對錯——它幫助我們理解改變的阻力在哪裡。</div>
+      <div class="options" id="q14-opts">
+        <button class="opt multi" onclick="toggleMulti(this,'q14','不用計算熱量')"><span class="opt-mark"></span>不用算卡路里、不用記食物</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q14','不用拒絕聚餐')"><span class="opt-mark"></span>可以自在參加聚餐不用顧慮</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q14','不用運動')"><span class="opt-mark"></span>再也不用強迫自己運動</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q14','不用面對失敗')"><span class="opt-mark"></span>不用再面對「又失敗了」的挫折感</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q14','不用被評價')"><span class="opt-mark"></span>不再被家人朋友盯著</button>
+        <button class="opt multi" onclick="toggleMulti(this,'q14','沒什麼鬆一口氣')"><span class="opt-mark"></span>我很堅定，不會鬆一口氣</button>
+      </div>
+      <div class="insight-badge" id="q14-insight"></div>
+    </div>
+
+    <!-- Q15 -->
+    <div class="q-card" id="q15">
+      <div class="q-number">Q 15</div>
+      <div class="q-twist">▸ 正向動機</div>
+      <div class="q-text">如果你成功維持理想體重一整年，<br>你最想做的事是什麼？</div>
+      <textarea class="q-textarea" id="q15-text" placeholder="例如：可以跟孩子一起跑步、買到想穿的衣服、不再需要那麼多藥……" oninput="textChanged('q15')"></textarea>
+    </div>
+
+    <!-- Q16 -->
+    <div class="q-card" id="q16">
+      <div class="q-number">Q 16</div>
+      <div class="q-twist">▸ 信心量表</div>
+      <div class="q-text">如果1是「完全沒信心」，10是「絕對做得到」，<br>你對這次改變的信心有幾分？</div>
+      <div class="slider-wrap">
+        <div class="slider-labels"><span>1 毫無把握</span><span>10 非常有信心</span></div>
+        <input type="range" min="1" max="10" value="5" id="confidence" oninput="confUpdate()">
+        <div class="slider-value" id="confVal">5 分</div>
+      </div>
+      <div class="insight-badge" id="q16-insight" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <!-- ════ E. 環境與社會 ════ -->
+  <div class="section-block">
+    <div class="section-header">
+      <div class="section-icon" style="background:#e0f2f1">🏠</div>
+      <div>
+        <h2>E．環境與社會支持</h2>
+        <p>OMA 4M—Monetary：社會環境對體重的影響</p>
+      </div>
+    </div>
+
+    <!-- Q17 -->
+    <div class="q-card" id="q17">
+      <div class="q-number">Q 17</div>
+      <div class="q-twist">▸ 環境設計</div>
+      <div class="q-text">你家裡「最顯眼的位置」放著什麼？</div>
+      <div class="options" id="q17-opts">
+        <button class="opt" onclick="pickOpt(this,'q17','零食糖果')"><span class="opt-mark"></span>零食、糖果或餅乾（放在桌上或開放架）</button>
+        <button class="opt" onclick="pickOpt(this,'q17','水果蔬菜')"><span class="opt-mark"></span>水果、蔬菜等健康食物</button>
+        <button class="opt" onclick="pickOpt(this,'q17','什麼都沒有')"><span class="opt-mark"></span>沒有特別放什麼食物</button>
+        <button class="opt" onclick="pickOpt(this,'q17','飲料')"><span class="opt-mark"></span>飲料（含糖或無糖都算）</button>
+      </div>
+      <div class="insight-badge" id="q17-insight"></div>
+    </div>
+
+    <!-- Q18 -->
+    <div class="q-card" id="q18">
+      <div class="q-number">Q 18</div>
+      <div class="q-twist">▸ 社交壓力</div>
+      <div class="q-text">你周圍的人（家人、同事、朋友）<br>對你的飲食/體重，態度是？</div>
+      <div class="options" id="q18-opts">
+        <button class="opt" onclick="pickOpt(this,'q18','積極支持')"><span class="opt-mark"></span>積極支持、一起改變</button>
+        <button class="opt" onclick="pickOpt(this,'q18','口頭鼓勵')"><span class="opt-mark"></span>口頭上支持，但生活上沒幫到</button>
+        <button class="opt" onclick="pickOpt(this,'q18','無所謂')"><span class="opt-mark"></span>不特別關心，各過各的</button>
+        <button class="opt" onclick="pickOpt(this,'q18','無意中阻礙')"><span class="opt-mark"></span>他們的生活習慣讓我更難改變</button>
+        <button class="opt" onclick="pickOpt(this,'q18','批評增加壓力')"><span class="opt-mark"></span>他們的評語讓我更有壓力</button>
+      </div>
+      <div class="insight-badge" id="q18-insight"></div>
+    </div>
+
+    <!-- Q19 -->
+    <div class="q-card" id="q19">
+      <div class="q-number">Q 19</div>
+      <div class="q-twist">▸ 真實障礙</div>
+      <div class="q-text">你生活中「最難改變」的一件事是？</div>
+      <div class="options" id="q19-opts">
+        <button class="opt" onclick="pickOpt(this,'q19','工作時間不規律')"><span class="opt-mark"></span>工作時間不規律，難以定時定量</button>
+        <button class="opt" onclick="pickOpt(this,'q19','家庭照顧責任')"><span class="opt-mark"></span>照顧家人，自己完全沒時間</button>
+        <button class="opt" onclick="pickOpt(this,'q19','經濟限制')"><span class="opt-mark"></span>健康飲食或健身費用太高</button>
+        <button class="opt" onclick="pickOpt(this,'q19','心理習慣')"><span class="opt-mark"></span>明知道不好，但就是忍不住</button>
+        <button class="opt" onclick="pickOpt(this,'q19','身體限制')"><span class="opt-mark"></span>身體疼痛或行動不便</button>
+        <button class="opt" onclick="pickOpt(this,'q19','沒有特別障礙')"><span class="opt-mark"></span>我沒有特別的阻礙</button>
+      </div>
+      <div class="insight-badge" id="q19-insight"></div>
+    </div>
+
+    <!-- Q20 -->
+    <div class="q-card" id="q20">
+      <div class="q-number">Q 20</div>
+      <div class="q-twist">▸ 開放收尾</div>
+      <div class="q-text">有沒有什麼你希望醫師知道的事，<br>但通常覺得「講了沒用」或「不好意思說」？</div>
+      <div class="q-hint">💡 這個空間完全保密，寫下任何你想說的。</div>
+      <textarea class="q-textarea" id="q20-text" placeholder="請自由書寫，沒有字數限制……" oninput="textChanged('q20')"></textarea>
+    </div>
+  </div>
+
+  <!-- ════ Submit ════ -->
+  <div style="text-align:center;margin-top:16px">
+    <button class="btn-submit" onclick="showSummary()" id="submitBtn">
+      ✅ 完成問卷，查看評估摘要
+    </button>
+  </div>
+
+  <!-- ════ Summary ════ -->
+  <div class="summary-box" id="summaryBox">
+    <h3>📊 生活型態評估摘要</h3>
+
+    <div class="sum-section">
+      <div class="sum-label">飲食行為風險</div>
+      <div class="sum-tags" id="sumDietTags"></div>
+    </div>
+
+    <div class="sum-section">
+      <div class="sum-label">身體活動</div>
+      <div class="sum-tags" id="sumActivityTags"></div>
+    </div>
+
+    <div class="sum-section">
+      <div class="sum-label">睡眠與壓力</div>
+      <div class="sum-tags" id="sumSleepTags"></div>
+    </div>
+
+    <div class="sum-section">
+      <div class="sum-label">動機與阻力</div>
+      <div class="sum-tags" id="sumMotTags"></div>
+    </div>
+
+    <div class="sum-section">
+      <div class="sum-label">環境與社會</div>
+      <div class="sum-tags" id="sumEnvTags"></div>
+    </div>
+
+    <div class="sum-section" id="sumGoalSection" style="display:none">
+      <div class="sum-label">病患最大動機</div>
+      <div class="sum-note" id="sumGoalText"></div>
+    </div>
+
+    <div class="sum-section" id="sumNoteSection" style="display:none">
+      <div class="sum-label">病患特別說明</div>
+      <div class="sum-note" id="sumNoteText"></div>
+    </div>
+
+    <div class="sum-section">
+      <div class="sum-label">信心分數</div>
+      <div class="sum-tags" id="sumConfTags"></div>
+    </div>
+
+    <div class="sum-section">
+      <div class="sum-label">主要行為障礙（OMA 4M）</div>
+      <div class="sum-tags" id="sumBarrierTags"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-main" onclick="copySummaryText()">📋 複製摘要文字</button>
+      <button class="btn-sec" onclick="window.print()">🖨️ 列印</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── State ─────────────────────────────────────────────────────────────────
+const state = {
+  q1: [], q3: [], q5: [], q6: [], q8: null, q9: null,
+  q11: null, q12: [], q13: null, q14: [], q16: 5,
+  q17: null, q18: null, q19: null,
+  q7: null, q10: null,
+  q2text: '', q15text: '', q20text: '',
+  firstMeal: 8, lastMeal: 21, confidence: 5
+};
+
+let answeredCount = 0;
+const TOTAL = 20;
+
+function updateProgress() {
+  let count = 0;
+  if (state.q1.length) count++;
+  if (state.q2text) count++;
+  if (state.q3.length) count++;
+  if (state.firstMeal || state.lastMeal) count++;
+  if (state.q5.length) count++;
+  if (state.q6.length) count++;
+  if (state.q7) count++;
+  if (state.q8) count++;
+  if (state.q9) count++;
+  if (state.q10) count++;
+  if (state.q11) count++;
+  if (state.q12.length) count++;
+  if (state.q13) count++;
+  if (state.q14.length) count++;
+  if (state.q15text) count++;
+  count++; // q16 always has default
+  if (state.q17) count++;
+  if (state.q18) count++;
+  if (state.q19) count++;
+  if (state.q20text) count++;
+  answeredCount = count;
+  const pct = Math.round(count / TOTAL * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressText').textContent = `${count} / ${TOTAL} 題`;
+  document.getElementById('progressPct').textContent = pct + '%';
+}
+
+// ── Insight messages ──────────────────────────────────────────────────────
+const insights = {
+  q1: {
+    '夜間大量進食': '夜食症候群：夜間熱量攝取 > 25% 與體重調節困難相關，也影響 Ghrelin 分泌節律。',
+    '高糖飲料每日': '每天 1 杯含糖飲料可額外攝入 150–300 kcal，一年累積相當於 6–12 kg 脂肪。',
+    '壓力大時大吃': '情緒性進食是皮質醇升高的行為反應，屬於 OMA 4M 中「Mental」因子。',
+    '邊看手機邊吃': '分心進食可使單餐攝入量增加 20–30%，大腦的飽足訊號延遲接收。'
+  },
+  q5: {
+    '其實差不多': '您描述的狀態接近「久坐」定義：靜態時間 > 8 hr/天，與獨立的代謝風險相關。'
+  },
+  q7: {
+    '很喘需休息': '爬 3–4 樓即明顯喘，提示心肺功能 (CRF) 可能偏低，建議評估運動耐受度。',
+    '避免爬樓梯': '迴避爬樓梯可能反映骨關節負擔或心肺功能限制，需進一步評估。'
+  },
+  q8: {
+    '關節痛疼痛': '疼痛是運動最常見的結構性障礙——肥胖減輕 10% 可減少膝關節壓力約 40%。',
+    '沒動力': '動機低落可能與低度憂鬱或睡眠品質不佳有關，建議進一步評估心理健康。'
+  },
+  q9: {
+    '01點後': '凌晨 1 點後才入睡，若需 7 點前起床，有效睡眠 < 6 小時，長期與肥胖風險 ↑ 55% 相關。'
+  },
+  q10: {
+    '超過一小時': '入睡潛伏期 > 1 小時符合失眠症標準，需評估睡眠衛生或轉介睡眠科。'
+  },
+  q11: {
+    '甜食高糖': '壓力時渴望甜食：皮質醇升高刺激多巴胺獎勵迴路，屬於生理驅動的情緒性進食。',
+    '喝酒': '酒精每克含 7 kcal，且抑制脂肪氧化，是容易被低估的體重增加因素。'
+  },
+  q14: {
+    '不用面對失敗': '「避免再次失敗」的動機反映過去的減重挫敗經歷——這是需要處理的心理阻力。'
+  },
+  q17: {
+    '零食糖果': '研究顯示：家中桌上放零食的人，體重平均比放水果的人重 4 kg。「眼不見為淨」是有科學根據的。'
+  },
+  q18: {
+    '無意中阻礙': '「周圍人的飲食習慣」是最常被低估的環境因素——改變家庭飲食文化比個人節食更有效。',
+    '批評增加壓力': '來自家人的批評常反而增加情緒性進食頻率，這是需要與家屬溝通的重點。'
+  }
+};
+
+function showInsight(qid, val) {
+  const box = document.getElementById(qid + '-insight');
+  if (!box) return;
+  const map = insights[qid];
+  if (!map) return;
+  const msg = Array.isArray(val)
+    ? val.map(v => map[v]).filter(Boolean)[0]
+    : map[val];
+  if (msg) {
+    box.innerHTML = `<strong>🔬 臨床關聯：</strong>${msg}`;
+    box.classList.add('show');
+  }
+}
+
+// ── Interaction handlers ──────────────────────────────────────────────────
+function pickOpt(el, qid, val) {
+  document.querySelectorAll(`#${qid}-opts .opt`).forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  state[qid] = val;
+  document.getElementById(qid).classList.add('answered');
+  showInsight(qid, val);
+  updateProgress();
+}
+
+function toggleMulti(el, qid, val) {
+  el.classList.toggle('selected');
+  if (!state[qid]) state[qid] = [];
+  if (el.classList.contains('selected')) {
+    if (!state[qid].includes(val)) state[qid].push(val);
+  } else {
+    state[qid] = state[qid].filter(v => v !== val);
+  }
+  const card = document.getElementById(qid);
+  if (state[qid].length > 0) card.classList.add('answered');
+  else card.classList.remove('answered');
+  showInsight(qid, state[qid]);
+  updateProgress();
+}
+
+function pickEmoji(qid, el, val) {
+  document.querySelectorAll(`#${qid}-scale .em-opt`).forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  state[qid] = val;
+  document.getElementById(qid).classList.add('answered');
+  showInsight(qid, val);
+  updateProgress();
+}
+
+function toggleDay(el, qid, day) {
+  el.classList.toggle('on');
+  if (!state[qid]) state[qid] = [];
+  if (el.classList.contains('on')) {
+    if (!state[qid].includes(day)) state[qid].push(day);
+  } else {
+    state[qid] = state[qid].filter(d => d !== day);
+  }
+  const count = state[qid].length;
+  document.getElementById('q6-count').textContent = `已選 ${count} 天`;
+  const card = document.getElementById(qid);
+  if (count > 0) card.classList.add('answered');
+  else card.classList.remove('answered');
+  if (count < 3) showInsight(qid, '低活動');
+  updateProgress();
+}
+
+function sliderUpdate(sliderId, valId, fmt) {
+  const v = parseInt(document.getElementById(sliderId).value);
+  document.getElementById(valId).textContent = fmt(v);
+  if (sliderId === 'firstMeal') state.firstMeal = v;
+  if (sliderId === 'lastMeal') state.lastMeal = v;
+
+  // Show eating window insight
+  const window_ = state.lastMeal - state.firstMeal;
+  const insightEl = document.getElementById('q4-insight');
+  if (window_ >= 12) {
+    insightEl.innerHTML = `<strong>⚠️ 進食窗口：</strong>約 ${window_} 小時，>12 小時的進食窗口與代謝症候群風險升高相關。限時進食（TRE）可考慮縮短至 8–10 小時。`;
+    insightEl.classList.add('show');
+  } else if (window_ <= 8) {
+    insightEl.innerHTML = `<strong>✅ 進食窗口：</strong>約 ${window_} 小時，屬於限時進食範圍，有利於代謝健康。`;
+    insightEl.classList.add('show');
+  } else {
+    insightEl.innerHTML = `<strong>📊 進食窗口：</strong>約 ${window_} 小時，屬於一般範圍。`;
+    insightEl.classList.add('show');
+  }
+  document.getElementById('q4').classList.add('answered');
+  updateProgress();
+}
+
+function confUpdate() {
+  const v = parseInt(document.getElementById('confidence').value);
+  state.confidence = v;
+  const labels = ['', '毫無把握', '很低', '偏低', '有些懷疑', '五五波', '稍有信心', '頗有信心', '相當有信心', '非常有信心', '絕對做得到'];
+  document.getElementById('confVal').textContent = `${v} 分　${labels[v]}`;
+  const insEl = document.getElementById('q16-insight');
+  if (v <= 3) {
+    insEl.innerHTML = '<strong>⚠️</strong> 信心偏低時，建議採用「小步驟目標」策略，避免設定過高目標造成挫敗感。';
+    insEl.classList.add('show');
+  } else if (v >= 8) {
+    insEl.innerHTML = '<strong>✅</strong> 高信心者配合適當目標設定，6 個月達到 5–10% 減重的成功率顯著較高。';
+    insEl.classList.add('show');
+  } else {
+    insEl.classList.remove('show');
+  }
+  document.getElementById('q16').classList.add('answered');
+  state.q16 = v;
+  updateProgress();
+}
+
+function textChanged(qid) {
+  const el = document.getElementById(qid + '-text');
+  const v = el ? el.value.trim() : '';
+  state[qid + 'text'] = v;
+  if (v.length > 0) document.getElementById(qid).classList.add('answered');
+  else document.getElementById(qid).classList.remove('answered');
+  updateProgress();
+}
+
+// ── Summary Generation ────────────────────────────────────────────────────
+function mkTag(text, cls='') {
+  return `<span class="sum-tag ${cls}">${text}</span>`;
+}
+
+function showSummary() {
+  const box = document.getElementById('summaryBox');
+
+  // Diet
+  const dietRisks = state.q1.filter(v => v !== '以上都不是我');
+  const dietTags = dietRisks.length
+    ? dietRisks.map(v => mkTag(v,'risk'))
+    : [mkTag('未見明顯高風險飲食模式','good')];
+  document.getElementById('sumDietTags').innerHTML = dietTags.join('');
+
+  // Activity
+  const actDays = state.q6 ? state.q6.length : 0;
+  const actTags = [];
+  if (actDays === 0) actTags.push(mkTag('上週 0 天有身體活動','risk'));
+  else if (actDays <= 2) actTags.push(mkTag(`上週僅 ${actDays} 天有活動`,'risk'));
+  else if (actDays >= 5) actTags.push(mkTag(`上週 ${actDays} 天有活動`,'good'));
+  else actTags.push(mkTag(`上週 ${actDays} 天有活動`));
+  if (state.q8) actTags.push(mkTag('主要障礙：' + state.q8, state.q8.includes('固定運動') ? 'good' : ''));
+  if (state.q7 && (state.q7.includes('很喘') || state.q7.includes('避免'))) actTags.push(mkTag('心肺功能待評估','risk'));
+  document.getElementById('sumActivityTags').innerHTML = actTags.join('');
+
+  // Sleep
+  const sleepTags = [];
+  if (state.q9 && state.q9.includes('01點')) sleepTags.push(mkTag('晚睡（凌晨1點後）','risk'));
+  if (state.q10 && state.q10.includes('超過')) sleepTags.push(mkTag('入睡困難 > 1hr','risk'));
+  if (state.q11) sleepTags.push(mkTag('壓力食物：' + state.q11));
+  if (state.q12.length) sleepTags.push(...state.q12.map(v => mkTag(v)));
+  if (!sleepTags.length) sleepTags.push(mkTag('睡眠/壓力未見明顯問題','good'));
+  document.getElementById('sumSleepTags').innerHTML = sleepTags.join('');
+
+  // Motivation
+  const motTags = [];
+  motTags.push(mkTag(`信心分數 ${state.confidence}/10`, state.confidence >= 7 ? 'good' : state.confidence <= 3 ? 'risk' : ''));
+  if (state.q14.length) motTags.push(...state.q14.filter(v=>!v.includes('堅定')).map(v=>mkTag(v,'risk')));
+  if (state.q13) motTags.push(mkTag('復胖模式：' + state.q13));
+  document.getElementById('sumMotTags').innerHTML = motTags.join('');
+
+  // Environment
+  const envTags = [];
+  if (state.q17) envTags.push(mkTag('家中顯眼處：' + state.q17, state.q17.includes('零食') ? 'risk' : state.q17.includes('水果') ? 'good' : ''));
+  if (state.q18) envTags.push(mkTag('社會支持：' + state.q18, state.q18.includes('積極') ? 'good' : state.q18.includes('批評') || state.q18.includes('阻礙') ? 'risk' : ''));
+  if (!envTags.length) envTags.push(mkTag('環境因素待評估'));
+  document.getElementById('sumEnvTags').innerHTML = envTags.join('');
+
+  // Goal
+  const goalText = state.q15text;
+  if (goalText) {
+    document.getElementById('sumGoalSection').style.display = 'block';
+    document.getElementById('sumGoalText').textContent = `「${goalText}」`;
+  }
+
+  // Note
+  const noteText = state.q20text;
+  if (noteText) {
+    document.getElementById('sumNoteSection').style.display = 'block';
+    document.getElementById('sumNoteText').textContent = noteText;
+  }
+
+  // Confidence
+  document.getElementById('sumConfTags').innerHTML =
+    mkTag(`${state.confidence}/10`, state.confidence >= 7 ? 'good' : state.confidence <= 4 ? 'risk' : '');
+
+  // Barriers
+  const barriers = [];
+  if (state.q19) barriers.push(mkTag(state.q19));
+  if (state.q8 && !state.q8.includes('固定')) barriers.push(mkTag('運動障礙：' + state.q8));
+  state.q14.filter(v => !v.includes('堅定')).forEach(v => barriers.push(mkTag(v,'risk')));
+  document.getElementById('sumBarrierTags').innerHTML = barriers.length
+    ? barriers.join('')
+    : mkTag('無明顯行為障礙','good');
+
+  box.classList.add('show');
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function copySummaryText() {
+  const lines = ['【生活型態評估摘要】', ''];
+
+  const dietEl = document.getElementById('sumDietTags');
+  lines.push('飲食行為：' + Array.from(dietEl.querySelectorAll('.sum-tag')).map(e=>e.textContent).join('、'));
+
+  const actEl = document.getElementById('sumActivityTags');
+  lines.push('身體活動：' + Array.from(actEl.querySelectorAll('.sum-tag')).map(e=>e.textContent).join('、'));
+
+  const slpEl = document.getElementById('sumSleepTags');
+  lines.push('睡眠/壓力：' + Array.from(slpEl.querySelectorAll('.sum-tag')).map(e=>e.textContent).join('、'));
+
+  const motEl = document.getElementById('sumMotTags');
+  lines.push('動機/阻力：' + Array.from(motEl.querySelectorAll('.sum-tag')).map(e=>e.textContent).join('、'));
+
+  const envEl = document.getElementById('sumEnvTags');
+  lines.push('環境：' + Array.from(envEl.querySelectorAll('.sum-tag')).map(e=>e.textContent).join('、'));
+
+  lines.push(`信心分數：${state.confidence}/10`);
+
+  const barrEl = document.getElementById('sumBarrierTags');
+  lines.push('主要障礙：' + Array.from(barrEl.querySelectorAll('.sum-tag')).map(e=>e.textContent).join('、'));
+
+  if (state.q15text) lines.push('', '病患最大動機：' + state.q15text);
+  if (state.q2text) lines.push('', '最亂的一天（飲食破功點）：' + state.q2text);
+  if (state.q20text) lines.push('', '病患特別說明：' + state.q20text);
+
+  navigator.clipboard.writeText(lines.join('\n')).then(() => {
+    const btn = event.target;
+    btn.textContent = '✓ 已複製！';
+    setTimeout(() => btn.textContent = '📋 複製摘要文字', 2000);
+  });
+}
+
+// Init slider displays
+document.addEventListener('DOMContentLoaded', () => {
+  sliderUpdate('firstMeal', 'firstMealVal', v => v + ':00');
+  sliderUpdate('lastMeal', 'lastMealVal', v => v >= 24 ? '0'+(v-24)+':00' : v+':00');
+  confUpdate();
+  updateProgress();
+});
+</script>
+</body>
+</html>
