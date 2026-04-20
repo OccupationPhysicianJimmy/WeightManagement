@@ -21,11 +21,22 @@
         h1 { margin: 0; font-size: 2.2em; letter-spacing: 2px; }
         h2 { color: #2c3e50; border-left: 6px solid #4ca1af; padding-left: 15px; margin-top: 30px; font-size: 1.5em; }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        
-        /* 新增：看看鏡中的你 樣式 */
+
+        /* 看看鏡中的你 樣式 */
         .cta-section { background: #fff; border: 2px solid #4ca1af; text-align: center; padding: 30px; border-radius: 12px; margin-bottom: 25px; }
         .btn-eval { display: inline-block; background-color: #4ca1af; color: white; padding: 12px 30px; text-decoration: none; border-radius: 30px; font-weight: bold; transition: background 0.3s; margin-top: 15px; }
         .btn-eval:hover { background-color: #2c3e50; }
+
+        /* 評估表單按鈕群組 */
+        .btn-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 20px; }
+        .btn-eval-outline { display: inline-block; background-color: transparent; color: #4ca1af; border: 2px solid #4ca1af; padding: 10px 22px; text-decoration: none; border-radius: 30px; font-weight: bold; transition: background 0.3s, color 0.3s; }
+        .btn-eval-outline:hover { background-color: #4ca1af; color: white; }
+        .btn-eval-outline.green  { color: #27ae60; border-color: #27ae60; }
+        .btn-eval-outline.green:hover  { background-color: #27ae60; color: white; }
+        .btn-eval-outline.orange { color: #e67e22; border-color: #e67e22; }
+        .btn-eval-outline.orange:hover { background-color: #e67e22; color: white; }
+        .btn-eval-outline.purple { color: #8e44ad; border-color: #8e44ad; }
+        .btn-eval-outline.purple:hover { background-color: #8e44ad; color: white; }
 
         .formula { background: #f8f9fa; border: 1px dashed #4ca1af; padding: 20px; border-radius: 10px; text-align: center; font-size: 1.1em; color: #16a085; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
@@ -37,7 +48,6 @@
     </style>
 </head>
 <body>
-
 <header>
     <h1>輕盈生活研究所：體重控制入門</h1>
     <p>透過科學與數據，開啟您的健康轉型計畫</p>
@@ -46,7 +56,16 @@
 <section class="cta-section">
     <h2>🪞 看看鏡中的你</h2>
     <p>在開始計畫前，誠實地觀察並記錄當下的自己，是成功轉變的第一步。</p>
+
+    <!-- 主要按鈕：初始狀態評估 -->
     <a href="EvaluationSheet/InitialSheet.html" class="btn-eval">進行初始狀態評估</a>
+
+    <!-- 新增：其他評估表單 -->
+    <div class="btn-group">
+        <a href="EvaluationSheet/OPDEvaluationPrint.html" class="btn-eval-outline green">🖨️ 門診評估列印表單</a>
+        <a href="EvaluationSheet/WholeObesityEvaulation.html" class="btn-eval-outline orange">📋 完整肥胖評估表單</a>
+        <a href="EvaluationSheet/LifeStyleEvaluation.html" class="btn-eval-outline purple">🏃 生活型態評估表單</a>
+    </div>
 </section>
 
 <section class="card">
@@ -66,7 +85,6 @@
             <li><strong>進食順序：</strong> 建議依照 <span class="highlight">水、菜、肉、飯</span> 的順序用餐。</li>
         </ul>
     </section>
-
     <section class="card">
         <h2>🏃 運動生理組</h2>
         <ul>
@@ -81,6 +99,5 @@
     <p>© 2026 輕盈生活研究所 | 專業引導 · 科學實踐</p>
     <p style="font-size: 0.85em;">本指南僅供衛教參考，實施前請諮詢專業醫療團隊。</p>
 </div>
-
 </body>
 </html>
