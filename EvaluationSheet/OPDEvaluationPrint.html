@@ -106,8 +106,7 @@
       add('');
       add('簽名', getTextValue('signature'));
 
-      return lines.join('
-');
+      return lines.join('\n');
     }
 
     function submitByEmail() {
@@ -191,6 +190,48 @@
       margin: 0 auto;
       padding: 10mm 12mm 14mm;
       background: white;
+    }
+
+    /* ── Navigation Bar ── */
+    .nav-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1.5px solid #ddd;
+    }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      font-size: 13px;
+      font-family: inherit;
+      font-weight: 600;
+      color: var(--accent);
+      background: #eef3f9;
+      border: 1.5px solid #b8cfe4;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s, border-color 0.15s;
+      white-space: nowrap;
+    }
+
+    .nav-btn:hover {
+      background: #d6e4f0;
+      border-color: var(--accent);
+    }
+
+    .nav-btn svg {
+      flex-shrink: 0;
+    }
+
+    /* ── Print: hide nav ── */
+    @media print {
+      .nav-bar { display: none; }
     }
 
     h1 {
@@ -408,7 +449,23 @@
 </head>
 <body>
   <div class="page">
-    
+
+    <!-- ── Navigation Buttons ── -->
+    <div class="nav-bar">
+      <a class="nav-btn" href="javascript:history.back()">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        回到上一頁
+      </a>
+      <a class="nav-btn" href="javascript:window.location.href='/'">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 6.5L8 2L14 6.5V14H10V10H6V14H2V6.5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        回到首頁
+      </a>
+    </div>
+
     <h1>成人肥胖臨床評估與治療表單</h1>
     <div class="subtitle">門診初診 / 複診勾選式表單（可列印使用）</div>
 
