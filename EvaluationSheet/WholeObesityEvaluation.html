@@ -1,1 +1,1192 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>成人肥胖臨床評估與治療表單</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
 
+    :root {
+      --primary: #1a3a5c;
+      --accent: #2e7d9e;
+      --light-accent: #e8f4f8;
+      --border: #c0c8d0;
+      --section-bg: #f0f5f9;
+      --text: #1a1a2e;
+      --soft: #5a6a7a;
+      --success: #2e7d52;
+      --warning: #b87333;
+      --bg: #f5f7fa;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .layout {
+      display: flex;
+      gap: 0;
+      min-height: 100vh;
+    }
+
+    /* LEFT: Form Panel */
+    .form-panel {
+      flex: 1 1 680px;
+      max-width: 760px;
+      background: white;
+      padding: 20px 24px;
+      overflow-y: auto;
+      border-right: 2px solid var(--border);
+    }
+
+    /* RIGHT: Summary Panel */
+    .summary-panel {
+      flex: 1 1 360px;
+      min-width: 320px;
+      max-width: 480px;
+      background: #0f2133;
+      color: #e8f0f8;
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .summary-header {
+      padding: 20px 20px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: #0a1929;
+    }
+
+    .summary-header h2 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #7ec8e3;
+      letter-spacing: 0.5px;
+    }
+
+    .summary-header p {
+      font-size: 11px;
+      color: #8aa0b4;
+      margin-top: 3px;
+    }
+
+    .summary-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 20px;
+    }
+
+    .summary-content::-webkit-scrollbar { width: 4px; }
+    .summary-content::-webkit-scrollbar-track { background: transparent; }
+    .summary-content::-webkit-scrollbar-thumb { background: #2a4a6a; border-radius: 2px; }
+
+    .summary-placeholder {
+      color: #4a6a84;
+      font-size: 13px;
+      text-align: center;
+      padding: 40px 20px;
+      line-height: 2;
+    }
+
+    .summary-placeholder .icon {
+      font-size: 40px;
+      display: block;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+
+    .summary-actions {
+      padding: 14px 20px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .btn-generate {
+      background: linear-gradient(135deg, #2e7d9e, #1a5276);
+      color: white;
+      border: none;
+      padding: 11px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-generate:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(46,125,158,0.4); }
+    .btn-generate:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .btn-copy-summary {
+      background: rgba(255,255,255,0.07);
+      color: #8ab8d0;
+      border: 1px solid rgba(255,255,255,0.12);
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .btn-copy-summary:hover { background: rgba(255,255,255,0.12); color: white; }
+
+    /* Form styles */
+    h1 {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--primary);
+      text-align: center;
+      margin-bottom: 2px;
+      letter-spacing: 0.5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 11px;
+      color: var(--soft);
+      margin-bottom: 14px;
+    }
+
+    .oma-badge {
+      display: inline-block;
+      background: var(--light-accent);
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    .section {
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    .section-title {
+      background: var(--section-bg);
+      border-bottom: 1.5px solid var(--border);
+      padding: 7px 10px;
+      font-weight: 700;
+      font-size: 13.5px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-body { padding: 10px; }
+
+    .meta-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+
+    .field {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      min-height: 28px;
+      flex-wrap: wrap;
+    }
+
+    .label { font-weight: 600; white-space: nowrap; font-size: 12px; }
+
+    input[type="text"], input[type="date"], input[type="number"], textarea, select {
+      border: 1px solid #bbc8d4;
+      padding: 4px 6px;
+      font-size: 12px;
+      font-family: inherit;
+      background: #fff;
+      border-radius: 3px;
+      color: var(--text);
+    }
+
+    input[type="text"]:focus, input[type="number"]:focus, textarea:focus, select:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+    }
+
+    input[type="text"], input[type="date"], input[type="number"] { height: 26px; }
+    textarea { width: 100%; min-height: 70px; resize: vertical; }
+    .input-sm { width: 65px; }
+    .input-md { width: 130px; }
+    .input-lg { width: 200px; }
+    .input-xl { width: 100%; }
+
+    .subsection { margin-top: 8px; padding-top: 8px; border-top: 1px dashed #c8d4de; }
+    .subsection:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+
+    .sub-title {
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 5px;
+      font-size: 12px;
+    }
+
+    .check-row { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+    .check { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; cursor: pointer; }
+    .check input[type="checkbox"] { width: 13px; height: 13px; cursor: pointer; accent-color: var(--accent); }
+    .check:hover { color: var(--accent); }
+
+    /* Risk indicator */
+    .risk-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 20px;
+    }
+    .risk-high { background: #fdecea; color: #c0392b; border: 1px solid #e74c3c; }
+    .risk-med  { background: #fef9e7; color: #b7770d; border: 1px solid #f39c12; }
+    .risk-low  { background: #eafaf1; color: #1e8449; border: 1px solid #27ae60; }
+
+    /* BMI visual */
+    .bmi-bar-wrap { margin: 6px 0 4px; }
+    .bmi-bar {
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(to right, #3498db 0%, #2ecc71 22%, #f39c12 36%, #e67e22 50%, #e74c3c 70%, #8e44ad 100%);
+      position: relative;
+    }
+    .bmi-marker {
+      position: absolute;
+      top: -3px;
+      width: 14px;
+      height: 14px;
+      background: white;
+      border: 2.5px solid #1a3a5c;
+      border-radius: 50%;
+      transform: translateX(-50%);
+      transition: left 0.4s ease;
+      display: none;
+    }
+
+    /* OMA Pillars */
+    .oma-pillars {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .pillar {
+      border: 1.5px solid var(--border);
+      border-radius: 5px;
+      padding: 6px 8px;
+      font-size: 11px;
+      text-align: center;
+      background: white;
+    }
+
+    .pillar-icon { font-size: 18px; display: block; margin-bottom: 2px; }
+    .pillar-title { font-weight: 700; color: var(--primary); font-size: 11px; }
+    .pillar-sub { color: var(--soft); font-size: 10px; margin-top: 1px; }
+
+    /* Action buttons in form */
+    .form-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 7px 14px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      border: 1.5px solid var(--border);
+      background: white;
+      color: var(--text);
+      transition: all 0.15s;
+    }
+    .btn:hover { background: var(--section-bg); }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .btn-primary:hover { background: #243d5c; }
+
+    /* Loading spinner */
+    .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Summary output */
+    .ai-summary {
+      font-size: 13px;
+      line-height: 1.75;
+    }
+
+    .ai-summary h3 {
+      font-size: 12px;
+      font-weight: 700;
+      color: #7ec8e3;
+      margin: 14px 0 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      border-bottom: 1px solid rgba(126,200,227,0.2);
+      padding-bottom: 4px;
+    }
+
+    .ai-summary h3:first-child { margin-top: 0; }
+
+    .ai-summary p { color: #c8dae8; margin-bottom: 6px; }
+
+    .ai-summary .highlight {
+      background: rgba(46,125,158,0.2);
+      border-left: 3px solid #2e7d9e;
+      padding: 6px 10px;
+      border-radius: 0 4px 4px 0;
+      margin: 6px 0;
+      color: #d4e8f4;
+    }
+
+    .ai-summary .warn {
+      background: rgba(184,115,51,0.15);
+      border-left: 3px solid #b87333;
+      padding: 6px 10px;
+      border-radius: 0 4px 4px 0;
+      margin: 6px 0;
+      color: #f0d0a8;
+    }
+
+    .ai-summary ul { padding-left: 16px; color: #c8dae8; }
+    .ai-summary li { margin-bottom: 3px; }
+
+    .tag {
+      display: inline-block;
+      background: rgba(46,125,158,0.25);
+      color: #7ec8e3;
+      padding: 1px 7px;
+      border-radius: 10px;
+      font-size: 11px;
+      margin: 2px 2px 2px 0;
+    }
+
+    .risk-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 4px 0;
+      font-size: 12px;
+    }
+
+    .risk-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .dot-red { background: #e74c3c; }
+    .dot-orange { background: #f39c12; }
+    .dot-green { background: #2ecc71; }
+
+    table.sum-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin: 6px 0;
+    }
+    table.sum-table td {
+      padding: 4px 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: #c8dae8;
+    }
+    table.sum-table td:first-child { color: #8aa0b4; width: 45%; }
+
+    .note-box {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 12px;
+      color: #a0c0d8;
+      line-height: 1.7;
+      white-space: pre-wrap;
+    }
+
+    .status-msg {
+      font-size: 12px;
+      color: var(--success);
+      font-weight: 700;
+      display: none;
+    }
+
+    @media (max-width: 900px) {
+      .layout { flex-direction: column; }
+      .summary-panel { position: static; height: auto; max-width: 100%; min-width: 0; }
+      .meta-grid { grid-template-columns: repeat(2, 1fr); }
+      .oma-pillars { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media print {
+      .summary-panel { display: none; }
+      .form-actions .btn-generate-wrap { display: none; }
+      body { background: white; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- LEFT: FORM PANEL -->
+  <div class="form-panel">
+    <h1>成人肥胖臨床評估與治療表單</h1>
+    <div class="subtitle">依據肥胖研究醫學會（OMA）5A 架構 ・ 門診初診 / 複診</div>
+
+    <!-- OMA 5A Pillars -->
+    <div class="oma-pillars">
+      <div class="pillar">
+        <span class="pillar-icon">🔍</span>
+        <div class="pillar-title">Ask</div>
+        <div class="pillar-sub">詢問同意討論體重</div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">📋</span>
+        <div class="pillar-title">Assess</div>
+        <div class="pillar-sub">評估病因與風險</div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">💬</span>
+        <div class="pillar-title">Advise</div>
+        <div class="pillar-sub">告知治療選項</div>
+      </div>
+      <div class="pillar">
+        <span class="pillar-icon">🤝</span>
+        <div class="pillar-title">Agree / Assist</div>
+        <div class="pillar-sub">共同決策與協助</div>
+      </div>
+    </div>
+
+    <!-- 一、基本資料 -->
+    <div class="section">
+      <div class="section-title">📁 一、基本資料</div>
+      <div class="section-body meta-grid">
+        <div class="field"><span class="label">姓名</span><input id="patientName" type="text" class="input-md" /></div>
+        <div class="field"><span class="label">病歷號</span><input id="chartNo" type="text" class="input-md" /></div>
+        <div class="field"><span class="label">日期</span><input id="visitDate" type="date" class="input-md" /></div>
+        <div class="field"><span class="label">醫師</span><input id="doctorName" type="text" class="input-md" /></div>
+        <div class="field"><span class="label">年齡</span><input id="age" type="number" class="input-sm" /></div>
+        <div class="field" id="genderGroup"><span class="label">性別</span>
+          <label class="check"><input type="checkbox" data-label="男" />男</label>
+          <label class="check"><input type="checkbox" data-label="女" />女</label>
+        </div>
+        <div class="field" id="visitTypeGroup"><span class="label">初/複診</span>
+          <label class="check"><input type="checkbox" data-label="初診" />初診</label>
+          <label class="check"><input type="checkbox" data-label="複診" />複診</label>
+        </div>
+        <div class="field"><span class="label">轉介來源</span><input id="referralSource" type="text" class="input-md" /></div>
+      </div>
+    </div>
+
+    <!-- 二、人體測量 -->
+    <div class="section">
+      <div class="section-title">📏 二、人體測量與肥胖分級</div>
+      <div class="section-body">
+        <div class="grid-4">
+          <div class="field"><span class="label">身高</span><input id="height" type="number" step="0.1" class="input-sm" />cm</div>
+          <div class="field"><span class="label">體重</span><input id="weight" type="number" step="0.1" class="input-sm" />kg</div>
+          <div class="field"><span class="label">BMI</span><input id="bmi" type="number" step="0.1" class="input-sm" readonly style="background:#f5f5f5" />kg/m²</div>
+          <div class="field"><span class="label">腰圍</span><input id="waist" type="number" step="0.1" class="input-sm" />cm</div>
+        </div>
+
+        <div class="bmi-bar-wrap">
+          <div class="bmi-bar"><div class="bmi-marker" id="bmiMarker"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--soft);margin-top:2px;">
+            <span>15</span><span>18.5</span><span>24</span><span>27</span><span>30</span><span>35</span><span>40</span><span>50</span>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="sub-title">BMI 分類（台灣成人標準）</div>
+          <div class="check-row" id="bmiGroup">
+            <label class="check"><input id="bmiUnder" type="checkbox" data-label="< 18.5 體重過輕" />&lt; 18.5 體重過輕</label>
+            <label class="check"><input id="bmiNormal" type="checkbox" data-label="18.5–23.9 正常" />18.5–23.9 正常</label>
+            <label class="check"><input id="bmiOver" type="checkbox" data-label="24.0–26.9 過重" />24.0–26.9 過重</label>
+            <label class="check"><input id="bmiObese1" type="checkbox" data-label="27.0–29.9 輕度肥胖" />27.0–29.9 輕度肥胖</label>
+            <label class="check"><input id="bmiObese2" type="checkbox" data-label="30.0–34.9 中度肥胖" />30.0–34.9 中度肥胖</label>
+            <label class="check"><input id="bmiObese3" type="checkbox" data-label="35.0–39.9 重度肥胖" />35.0–39.9 重度肥胖</label>
+            <label class="check"><input id="bmiObese4" type="checkbox" data-label="≥ 40 病態性肥胖" />≥ 40 病態性肥胖</label>
+          </div>
+        </div>
+
+        <div class="subsection grid-2">
+          <div>
+            <div class="sub-title">腹部肥胖</div>
+            <div class="check-row" id="waistGroup">
+              <label class="check"><input type="checkbox" data-label="男 ≥ 90 cm（是）" />男 ≥ 90 cm</label>
+              <label class="check"><input type="checkbox" data-label="女 ≥ 80 cm（是）" />女 ≥ 80 cm</label>
+              <label class="check"><input type="checkbox" data-label="未達腹部肥胖" />未達腹部肥胖</label>
+            </div>
+          </div>
+          <div>
+            <div class="sub-title">近期體重變化</div>
+            <div class="check-row" id="weightChangeGroup">
+              <label class="check"><input type="checkbox" data-label="3 個月內增加 ≥ 5%" />3 個月內增加 ≥ 5%</label>
+              <label class="check"><input type="checkbox" data-label="3 個月內減少 ≥ 5%" />3 個月內減少 ≥ 5%</label>
+              <label class="check"><input type="checkbox" data-label="穩定" />穩定</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection grid-2">
+          <div>
+            <div class="sub-title">體組成（選填）</div>
+            <div class="field"><span class="label">體脂率%</span><input id="bodyFat" type="number" step="0.1" class="input-sm" /></div>
+          </div>
+          <div>
+            <div class="sub-title">血壓</div>
+            <div class="field"><span class="label">BP</span><input id="bp" type="text" class="input-md" placeholder="120/80 mmHg" /></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 三、病史 -->
+    <div class="section">
+      <div class="section-title">🩺 三、肥胖相關病史與次級原因（OMA Assess）</div>
+      <div class="section-body">
+        <div class="subsection">
+          <div class="sub-title">相關共病（可複選）</div>
+          <div class="check-row" id="comorbidityGroup">
+            <label class="check"><input type="checkbox" data-label="第二型糖尿病" />第二型糖尿病</label>
+            <label class="check"><input type="checkbox" data-label="前期糖尿病" />前期糖尿病</label>
+            <label class="check"><input type="checkbox" data-label="高血壓" />高血壓</label>
+            <label class="check"><input type="checkbox" data-label="高血脂" />高血脂</label>
+            <label class="check"><input type="checkbox" data-label="冠心病 / ASCVD" />冠心病 / ASCVD</label>
+            <label class="check"><input type="checkbox" data-label="NAFLD / MASLD" />NAFLD / MASLD</label>
+            <label class="check"><input type="checkbox" data-label="高尿酸 / 痛風" />高尿酸 / 痛風</label>
+            <label class="check"><input type="checkbox" data-label="睡眠呼吸中止症(OSA)" />睡眠呼吸中止症(OSA)</label>
+            <label class="check"><input type="checkbox" data-label="骨關節炎" />骨關節炎</label>
+            <label class="check"><input type="checkbox" data-label="PCOS" />PCOS</label>
+            <label class="check"><input type="checkbox" data-label="GERD" />GERD</label>
+            <label class="check"><input type="checkbox" data-label="憂鬱 / 焦慮" />憂鬱 / 焦慮</label>
+            <label class="check"><input type="checkbox" data-label="腎臟病(CKD)" />腎臟病(CKD)</label>
+            <label class="check"><input type="checkbox" data-label="心臟衰竭" />心臟衰竭</label>
+            <label class="check"><input type="checkbox" data-label="肥胖低通氣症候群" />肥胖低通氣症候群</label>
+            <span class="check">其他：<input id="otherComorbidity" type="text" class="input-md" /></span>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="sub-title">體重增加相關因素（OMA 4M：Mental / Mechanical / Metabolic / Monetary）</div>
+          <div class="check-row" id="weightFactorGroup">
+            <label class="check"><input type="checkbox" data-label="家族史/基因" />家族史/基因</label>
+            <label class="check"><input type="checkbox" data-label="久坐工作" />久坐工作</label>
+            <label class="check"><input type="checkbox" data-label="睡眠不足（< 7 hr）" />睡眠不足（< 7 hr）</label>
+            <label class="check"><input type="checkbox" data-label="輪班工作" />輪班工作</label>
+            <label class="check"><input type="checkbox" data-label="慢性壓力" />慢性壓力</label>
+            <label class="check"><input type="checkbox" data-label="情緒性進食" />情緒性進食</label>
+            <label class="check"><input type="checkbox" data-label="暴食行為" />暴食行為</label>
+            <label class="check"><input type="checkbox" data-label="酒精攝取" />酒精攝取</label>
+            <label class="check"><input type="checkbox" data-label="停菸後增重" />停菸後增重</label>
+            <label class="check"><input type="checkbox" data-label="更年期/荷爾蒙" />更年期/荷爾蒙</label>
+            <label class="check"><input type="checkbox" data-label="行動障礙/疼痛" />行動障礙/疼痛</label>
+            <label class="check"><input type="checkbox" data-label="社經/食物環境因素" />社經/食物環境因素</label>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="sub-title">次級肥胖 / 藥物相關評估</div>
+          <div class="check-row" id="secondaryGroup">
+            <label class="check"><input type="checkbox" data-label="疑甲狀腺低下" />疑甲狀腺低下</label>
+            <label class="check"><input type="checkbox" data-label="疑庫欣症候群" />疑庫欣症候群</label>
+            <label class="check"><input type="checkbox" data-label="疑下視丘/內分泌異常" />疑下視丘/內分泌異常</label>
+            <label class="check"><input type="checkbox" data-label="疑多囊卵巢症候群" />疑多囊卵巢症候群</label>
+            <label class="check"><input type="checkbox" data-label="抗精神病藥物" />抗精神病藥物</label>
+            <label class="check"><input type="checkbox" data-label="抗憂鬱藥物" />抗憂鬱藥物</label>
+            <label class="check"><input type="checkbox" data-label="類固醇（長期）" />類固醇（長期）</label>
+            <label class="check"><input type="checkbox" data-label="胰島素/促泌劑" />胰島素/促泌劑</label>
+            <label class="check"><input type="checkbox" data-label="其他致胖藥物" />其他致胖藥物</label>
+            <label class="check"><input type="checkbox" data-label="未見明顯次級因素" />未見明顯次級因素</label>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="sub-title">Edmonton 肥胖分期系統（EOSS）</div>
+          <div class="check-row" id="eossGroup">
+            <label class="check"><input type="checkbox" data-label="EOSS 0：無功能損害" />0：無功能損害</label>
+            <label class="check"><input type="checkbox" data-label="EOSS 1：輕度風險因子" />1：輕度風險因子</label>
+            <label class="check"><input type="checkbox" data-label="EOSS 2：確立共病" />2：確立共病</label>
+            <label class="check"><input type="checkbox" data-label="EOSS 3：器官損害" />3：器官損害</label>
+            <label class="check"><input type="checkbox" data-label="EOSS 4：嚴重失能" />4：嚴重失能</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 四、生活型態 -->
+    <div class="section">
+      <div class="section-title">🥗 四、生活型態與行為評估</div>
+      <div class="section-body">
+        <div class="subsection grid-2">
+          <div>
+            <div class="sub-title">飲食型態</div>
+            <div class="check-row" id="dietGroup">
+              <label class="check"><input type="checkbox" data-label="高糖飲食" />高糖飲食</label>
+              <label class="check"><input type="checkbox" data-label="高脂飲食" />高脂飲食</label>
+              <label class="check"><input type="checkbox" data-label="精緻澱粉為主" />精緻澱粉為主</label>
+              <label class="check"><input type="checkbox" data-label="外食為主" />外食為主</label>
+              <label class="check"><input type="checkbox" data-label="夜食症候群" />夜食症候群</label>
+              <label class="check"><input type="checkbox" data-label="不規律進食" />不規律進食</label>
+              <label class="check"><input type="checkbox" data-label="高熱量飲料" />高熱量飲料</label>
+              <label class="check"><input type="checkbox" data-label="飲食控制嘗試中" />飲食控制嘗試中</label>
+            </div>
+            <div class="field" style="margin-top:6px;"><span class="label">餐次/重點</span><input id="mealPattern" type="text" class="input-xl" placeholder="e.g. 一日三餐、宵夜習慣" /></div>
+          </div>
+          <div>
+            <div class="sub-title">身體活動與睡眠</div>
+            <div class="check-row" id="activityGroup">
+              <label class="check"><input type="checkbox" data-label="久坐（< 30 min/週運動）" />久坐（< 30 min/週運動）</label>
+              <label class="check"><input type="checkbox" data-label="輕度活動（< 150 min/週）" />輕度活動（< 150 min/週）</label>
+              <label class="check"><input type="checkbox" data-label="達標（≥ 150 min/週有氧）" />達標（≥ 150 min/週有氧）</label>
+              <label class="check"><input type="checkbox" data-label="睡眠不足（< 7 hr）" />睡眠不足（< 7 hr）</label>
+              <label class="check"><input type="checkbox" data-label="睡眠足夠（7–9 hr）" />睡眠足夠（7–9 hr）</label>
+              <label class="check"><input type="checkbox" data-label="疑似 OSA（待評估）" />疑似 OSA（待評估）</label>
+            </div>
+            <div class="field" style="margin-top:6px;"><span class="label">運動類型</span><input id="exerciseType" type="text" class="input-xl" placeholder="e.g. 快走、游泳" /></div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="sub-title">減重歷史</div>
+          <div class="check-row" id="historyGroup">
+            <label class="check"><input type="checkbox" data-label="無減重史" />無減重史</label>
+            <label class="check"><input type="checkbox" data-label="曾節食多次（溜溜球）" />曾節食多次（溜溜球）</label>
+            <label class="check"><input type="checkbox" data-label="曾用藥物減重" />曾用藥物減重</label>
+            <label class="check"><input type="checkbox" data-label="曾行減重手術" />曾行減重手術</label>
+            <label class="check"><input type="checkbox" data-label="曾使用代餐" />曾使用代餐</label>
+          </div>
+          <div class="field" style="margin-top:5px;"><span class="label">過去最成功減重</span><input id="bestLoss" type="number" step="0.1" class="input-sm" />kg</div>
+        </div>
+
+        <div class="subsection">
+          <div class="sub-title">動機與準備度（OMA Change Talk）</div>
+          <div class="check-row" id="motivationGroup">
+            <label class="check"><input type="checkbox" data-label="高動機（主動求診）" />高動機（主動求診）</label>
+            <label class="check"><input type="checkbox" data-label="中等動機（願意嘗試）" />中等動機（願意嘗試）</label>
+            <label class="check"><input type="checkbox" data-label="低動機（家屬推動）" />低動機（家屬推動）</label>
+            <label class="check"><input type="checkbox" data-label="有時間投入改變" />有時間投入改變</label>
+            <label class="check"><input type="checkbox" data-label="支持系統良好" />支持系統良好</label>
+            <label class="check"><input type="checkbox" data-label="經濟限制" />經濟限制</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 五、檢查 -->
+    <div class="section">
+      <div class="section-title">🔬 五、代謝與檢驗評估</div>
+      <div class="section-body grid-3">
+        <div class="field"><span class="label">空腹血糖</span><input id="sugar" type="text" class="input-sm" />mg/dL</div>
+        <div class="field"><span class="label">HbA1c</span><input id="hba1c" type="text" class="input-sm" />%</div>
+        <div class="field"><span class="label">TG</span><input id="tg" type="text" class="input-sm" />mg/dL</div>
+        <div class="field"><span class="label">HDL-C</span><input id="hdl" type="text" class="input-sm" />mg/dL</div>
+        <div class="field"><span class="label">LDL-C</span><input id="ldl" type="text" class="input-sm" />mg/dL</div>
+        <div class="field"><span class="label">AST/ALT</span><input id="lft" type="text" class="input-md" placeholder="25/32" /></div>
+        <div class="field"><span class="label">Cr/eGFR</span><input id="renal" type="text" class="input-md" placeholder="0.9/85" /></div>
+        <div class="field"><span class="label">尿酸</span><input id="uric" type="text" class="input-sm" />mg/dL</div>
+        <div class="field"><span class="label">TSH</span><input id="tsh" type="text" class="input-sm" />mIU/L</div>
+        <div class="field" style="grid-column:span 3"><span class="label">其他</span><input id="otherLab" type="text" style="width:90%" /></div>
+      </div>
+    </div>
+
+    <!-- 六、治療 -->
+    <div class="section">
+      <div class="section-title">💊 六、治療分級與處置（OMA Advise + Agree）</div>
+      <div class="section-body">
+        <div class="subsection">
+          <div class="sub-title">治療適應症</div>
+          <div class="check-row" id="indicationGroup">
+            <label class="check"><input type="checkbox" data-label="BMI ≥ 27 + 共病（藥物適應症）" />BMI ≥ 27 + 共病（藥物適應症）</label>
+            <label class="check"><input type="checkbox" data-label="BMI ≥ 30（藥物適應症）" />BMI ≥ 30（藥物適應症）</label>
+            <label class="check"><input type="checkbox" data-label="BMI ≥ 32.5 + 共病（手術考量）" />BMI ≥ 32.5 + 共病（手術考量）</label>
+            <label class="check"><input type="checkbox" data-label="BMI ≥ 37.5（手術考量）" />BMI ≥ 37.5（手術考量）</label>
+            <label class="check"><input type="checkbox" data-label="生活型態介入為主" />生活型態介入為主</label>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="sub-title">生活型態處方（強度介入）</div>
+          <div class="check-row" id="lifestyleRxGroup">
+            <label class="check"><input type="checkbox" data-label="低熱量飲食（500–750 kcal 赤字）" />低熱量飲食（500–750 kcal 赤字）</label>
+            <label class="check"><input type="checkbox" data-label="極低熱量飲食（VLCD < 800 kcal）" />極低熱量飲食（VLCD < 800 kcal）</label>
+            <label class="check"><input type="checkbox" data-label="地中海飲食" />地中海飲食</label>
+            <label class="check"><input type="checkbox" data-label="低碳 / 生酮飲食" />低碳 / 生酮飲食</label>
+            <label class="check"><input type="checkbox" data-label="間歇性斷食（TRE）" />間歇性斷食（TRE）</label>
+            <label class="check"><input type="checkbox" data-label="有氧運動 ≥ 150 min/週" />有氧運動 ≥ 150 min/週</label>
+            <label class="check"><input type="checkbox" data-label="阻力訓練 ≥ 2 次/週" />阻力訓練 ≥ 2 次/週</label>
+            <label class="check"><input type="checkbox" data-label="行為認知治療（CBT）" />行為認知治療（CBT）</label>
+            <label class="check"><input type="checkbox" data-label="飲食日記/APP 紀錄" />飲食日記/APP 紀錄</label>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="sub-title">藥物治療（OMA 建議：以 GLP-1 RA 優先考量）</div>
+          <div class="check-row" id="medGroup">
+            <label class="check"><input type="checkbox" data-label="GLP-1 RA：Semaglutide（Wegovy/Ozempic）" />GLP-1 RA：Semaglutide</label>
+            <label class="check"><input type="checkbox" data-label="GLP-1/GIP RA：Tirzepatide（Mounjaro）" />GLP-1/GIP RA：Tirzepatide</label>
+            <label class="check"><input type="checkbox" data-label="GLP-1 RA：Liraglutide（Saxenda）" />GLP-1 RA：Liraglutide</label>
+            <label class="check"><input type="checkbox" data-label="GLP-1 RA：Dulaglutide（Trulicity）" />GLP-1 RA：Dulaglutide</label>
+            <label class="check"><input type="checkbox" data-label="Orlistat（脂肪酶抑制劑）" />Orlistat</label>
+            <label class="check"><input type="checkbox" data-label="Phentermine" />Phentermine</label>
+            <label class="check"><input type="checkbox" data-label="Bupropion/Naltrexone" />Bupropion/Naltrexone</label>
+            <label class="check"><input type="checkbox" data-label="Topiramate（輔助）" />Topiramate（輔助）</label>
+            <label class="check"><input type="checkbox" data-label="Metformin（糖尿病）" />Metformin（糖尿病）</label>
+            <label class="check"><input type="checkbox" data-label="SGLT-2 抑制劑" />SGLT-2 抑制劑</label>
+            <span class="check">其他：<input id="otherMed" type="text" class="input-md" /></span>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="sub-title">外科 / 內視鏡介入</div>
+          <div class="check-row" id="procedureGroup">
+            <label class="check"><input type="checkbox" data-label="胃繞道手術（RYGB）" />胃繞道手術（RYGB）</label>
+            <label class="check"><input type="checkbox" data-label="胃袖狀切除術（SG）" />胃袖狀切除術（SG）</label>
+            <label class="check"><input type="checkbox" data-label="內視鏡胃成形術（ESG）" />內視鏡胃成形術（ESG）</label>
+            <label class="check"><input type="checkbox" data-label="胃內氣球" />胃內氣球</label>
+            <label class="check"><input type="checkbox" data-label="暫不考慮手術" />暫不考慮手術</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 七、治療目標 -->
+    <div class="section">
+      <div class="section-title">🎯 七、以病患為中心的治療目標（OMA SMART Goals）</div>
+      <div class="section-body">
+        <div class="subsection">
+          <div class="sub-title">目標設定</div>
+          <div class="check-row" id="goalGroup">
+            <label class="check"><input type="checkbox" data-label="3–6 個月減重 5%（最低有效）" />3–6 個月減重 5%（最低有效）</label>
+            <label class="check"><input type="checkbox" data-label="3–6 個月減重 10%（顯著改善）" />3–6 個月減重 10%（顯著改善）</label>
+            <label class="check"><input type="checkbox" data-label="減重 15–20%（GLP-1 RA 目標）" />減重 15–20%（GLP-1 RA 目標）</label>
+            <label class="check"><input type="checkbox" data-label="維持體重不再上升" />維持體重不再上升</label>
+            <label class="check"><input type="checkbox" data-label="改善血糖/HbA1c" />改善血糖/HbA1c</label>
+            <label class="check"><input type="checkbox" data-label="改善血壓" />改善血壓</label>
+            <label class="check"><input type="checkbox" data-label="改善血脂" />改善血脂</label>
+            <label class="check"><input type="checkbox" data-label="改善 OSA" />改善 OSA</label>
+            <label class="check"><input type="checkbox" data-label="改善脂肪肝" />改善脂肪肝</label>
+            <label class="check"><input type="checkbox" data-label="改善活動能力" />改善活動能力</label>
+            <label class="check"><input type="checkbox" data-label="改善心理健康/生活品質" />改善心理健康/生活品質</label>
+          </div>
+        </div>
+        <div class="grid-2" style="margin-top:8px;">
+          <div class="field"><span class="label">短期目標（1個月）</span><input id="shortGoal" type="text" class="input-xl" /></div>
+          <div class="field"><span class="label">長期目標（6–12個月）</span><input id="longGoal" type="text" class="input-xl" /></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 八、追蹤 -->
+    <div class="section">
+      <div class="section-title">📅 八、追蹤計畫與醫囑（OMA Assist + Arrange）</div>
+      <div class="section-body">
+        <div class="grid-3">
+          <div>
+            <div class="sub-title">追蹤頻率</div>
+            <div class="check-row" id="followupGroup">
+              <label class="check"><input type="checkbox" data-label="2 週追蹤（藥物起始）" />2 週追蹤（藥物起始）</label>
+              <label class="check"><input type="checkbox" data-label="1 個月追蹤" />1 個月追蹤</label>
+              <label class="check"><input type="checkbox" data-label="3 個月追蹤（穩定期）" />3 個月追蹤（穩定期）</label>
+            </div>
+          </div>
+          <div>
+            <div class="sub-title">追蹤監測項目</div>
+            <div class="check-row" id="monitorGroup">
+              <label class="check"><input type="checkbox" data-label="體重/BMI/腰圍" />體重/BMI/腰圍</label>
+              <label class="check"><input type="checkbox" data-label="飲食及活動日記" />飲食及活動日記</label>
+              <label class="check"><input type="checkbox" data-label="藥物療效與副作用" />藥物療效與副作用</label>
+              <label class="check"><input type="checkbox" data-label="血糖/HbA1c 複查" />血糖/HbA1c 複查</label>
+              <label class="check"><input type="checkbox" data-label="血脂複查" />血脂複查</label>
+              <label class="check"><input type="checkbox" data-label="肝功能複查" />肝功能複查</label>
+            </div>
+          </div>
+          <div>
+            <div class="sub-title">跨科轉介</div>
+            <div class="check-row" id="referralGroup">
+              <label class="check"><input type="checkbox" data-label="轉營養師" />轉營養師</label>
+              <label class="check"><input type="checkbox" data-label="轉運動/復健" />轉運動/復健</label>
+              <label class="check"><input type="checkbox" data-label="轉心理/身心科" />轉心理/身心科</label>
+              <label class="check"><input type="checkbox" data-label="轉減重外科" />轉減重外科</label>
+              <label class="check"><input type="checkbox" data-label="轉睡眠科(OSA)" />轉睡眠科(OSA)</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <div class="sub-title">醫師備註</div>
+          <textarea id="note" placeholder="請輸入醫師備註、特殊情況或個案化建議"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action buttons -->
+    <div class="form-actions">
+      <button class="btn" onclick="copyFormToClipboard()">複製表單</button>
+      <button class="btn" onclick="window.print()">列印表單</button>
+      <button class="btn" onclick="submitByEmail()">送出 Email</button>
+      <span id="submitStatus" class="status-msg">✓ 已完成</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:10px;font-size:11px;color:var(--soft)">
+      <div>簽名：<input id="signature" type="text" class="input-md" /></div>
+      <div>依據 OMA 2023 肥胖臨床建議 ・ 版本 v2.0</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: AI SUMMARY PANEL -->
+  <div class="summary-panel">
+    <div class="summary-header">
+      <h2>🤖 AI 臨床摘要產生器</h2>
+      <p>依據 OMA 建議，自動整合表單資料生成結構化摘要</p>
+    </div>
+    <div class="summary-content" id="summaryContent">
+      <div class="summary-placeholder">
+        <span class="icon">📄</span>
+        填寫表單後，按下<br>「產生 AI 摘要」<br>即可生成結構化臨床摘要<br><br>
+        <span style="font-size:11px;opacity:0.7">支援病歷記錄・轉介信・團隊溝通</span>
+      </div>
+    </div>
+    <div class="summary-actions">
+      <button class="btn-generate" onclick="generateSummary()" id="generateBtn">
+        <span>✨</span> 產生 AI 摘要
+      </button>
+      <button class="btn-copy-summary" onclick="copySummary()" id="copySummaryBtn" style="display:none">
+        📋 複製摘要文字
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── Utilities ────────────────────────────────────────────────────────────
+  function getChecked(id) {
+    const el = document.getElementById(id);
+    if (!el) return [];
+    return Array.from(el.querySelectorAll('input[type="checkbox"]:checked'))
+      .map(cb => cb.dataset.label || '');
+  }
+
+  function val(id) {
+    const el = document.getElementById(id);
+    return el ? (el.value || '').trim() : '';
+  }
+
+  // ── BMI Calculation ───────────────────────────────────────────────────────
+  function updateBmiCategory(bmi) {
+    ['bmiUnder','bmiNormal','bmiOver','bmiObese1','bmiObese2','bmiObese3','bmiObese4']
+      .forEach(id => { const el = document.getElementById(id); if(el) el.checked = false; });
+    let target = null;
+    if (bmi < 18.5) target = 'bmiUnder';
+    else if (bmi < 24) target = 'bmiNormal';
+    else if (bmi < 27) target = 'bmiOver';
+    else if (bmi < 30) target = 'bmiObese1';
+    else if (bmi < 35) target = 'bmiObese2';
+    else if (bmi < 40) target = 'bmiObese3';
+    else target = 'bmiObese4';
+    const el = document.getElementById(target);
+    if (el) el.checked = true;
+
+    // Update BMI marker
+    const marker = document.getElementById('bmiMarker');
+    if (marker && bmi > 0) {
+      const minBMI = 15, maxBMI = 50;
+      const pct = Math.min(Math.max((bmi - minBMI) / (maxBMI - minBMI) * 100, 0), 100);
+      marker.style.left = pct + '%';
+      marker.style.display = 'block';
+    }
+  }
+
+  function calculateBMI() {
+    const h = parseFloat(val('height'));
+    const w = parseFloat(val('weight'));
+    const bmiEl = document.getElementById('bmi');
+    if (!bmiEl) return;
+    if (h > 0 && w > 0) {
+      const bmi = w / Math.pow(h / 100, 2);
+      bmiEl.value = bmi.toFixed(1);
+      updateBmiCategory(bmi);
+    } else {
+      bmiEl.value = '';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('height')?.addEventListener('input', calculateBMI);
+    document.getElementById('weight')?.addEventListener('input', calculateBMI);
+    // Default today's date
+    const d = document.getElementById('visitDate');
+    if (d && !d.value) d.value = new Date().toISOString().split('T')[0];
+  });
+
+  // ── Build form data object ────────────────────────────────────────────────
+  function collectFormData() {
+    return {
+      patient: {
+        name: val('patientName'), chart: val('chartNo'),
+        date: val('visitDate'), doctor: val('doctorName'),
+        age: val('age'),
+        gender: getChecked('genderGroup').join('、'),
+        visitType: getChecked('visitTypeGroup').join('、'),
+        referral: val('referralSource')
+      },
+      anthropometry: {
+        height: val('height'), weight: val('weight'),
+        bmi: val('bmi'), waist: val('waist'),
+        bodyFat: val('bodyFat'), bp: val('bp'),
+        bmiCategory: getChecked('bmiGroup').join('、'),
+        waistStatus: getChecked('waistGroup').join('、'),
+        weightChange: getChecked('weightChangeGroup').join('、')
+      },
+      history: {
+        comorbidities: getChecked('comorbidityGroup').join('、'),
+        otherComorbidity: val('otherComorbidity'),
+        weightFactors: getChecked('weightFactorGroup').join('、'),
+        secondary: getChecked('secondaryGroup').join('、'),
+        eoss: getChecked('eossGroup').join('、')
+      },
+      lifestyle: {
+        diet: getChecked('dietGroup').join('、'),
+        mealPattern: val('mealPattern'),
+        activity: getChecked('activityGroup').join('、'),
+        exerciseType: val('exerciseType'),
+        history: getChecked('historyGroup').join('、'),
+        bestLoss: val('bestLoss'),
+        motivation: getChecked('motivationGroup').join('、')
+      },
+      labs: {
+        sugar: val('sugar'), hba1c: val('hba1c'),
+        tg: val('tg'), hdl: val('hdl'), ldl: val('ldl'),
+        lft: val('lft'), renal: val('renal'),
+        uric: val('uric'), tsh: val('tsh'), other: val('otherLab')
+      },
+      treatment: {
+        indications: getChecked('indicationGroup').join('、'),
+        lifestyleRx: getChecked('lifestyleRxGroup').join('、'),
+        medications: getChecked('medGroup').join('、'),
+        otherMed: val('otherMed'),
+        procedures: getChecked('procedureGroup').join('、')
+      },
+      goals: {
+        selected: getChecked('goalGroup').join('、'),
+        shortTerm: val('shortGoal'),
+        longTerm: val('longGoal')
+      },
+      followup: {
+        frequency: getChecked('followupGroup').join('、'),
+        monitoring: getChecked('monitorGroup').join('、'),
+        referrals: getChecked('referralGroup').join('、'),
+        note: val('note')
+      }
+    };
+  }
+
+  // ── AI Summary Generation ─────────────────────────────────────────────────
+  let lastSummaryText = '';
+
+  async function generateSummary() {
+    const btn = document.getElementById('generateBtn');
+    const content = document.getElementById('summaryContent');
+    const copyBtn = document.getElementById('copySummaryBtn');
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> 生成中...';
+    content.innerHTML = '<div class="summary-placeholder"><span class="icon">⏳</span>AI 正在分析資料並生成摘要...</div>';
+    copyBtn.style.display = 'none';
+
+    const data = collectFormData();
+
+    const prompt = `你是一位肥胖醫學專科醫師助理，請根據以下臨床表單資料，依據肥胖研究醫學會（OMA）2023年建議，生成一份結構化的中文臨床摘要。
+
+【表單資料】
+${JSON.stringify(data, null, 2)}
+
+請生成以下結構的摘要（使用繁體中文）：
+
+## 🏥 病患概要
+簡要描述病患基本資料、BMI 分類及肥胖嚴重度（EOSS分期）。
+
+## ⚠️ 代謝風險評估
+列出主要共病、代謝風險因子，評估整體心血管代謝風險。
+
+## 🔍 肥胖病因分析（OMA 4M框架）
+從 Mental（心理）、Mechanical（機械）、Metabolic（代謝）、Monetary（社經）四個面向分析可能病因，以及是否有次級肥胖原因。
+
+## 💊 OMA 建議治療策略
+根據 OMA 5A 架構（Ask/Assess/Advise/Agree/Assist），提出個案化治療建議，包括：
+- 生活型態介入強度
+- 藥物治療選擇及理由（特別說明 GLP-1 RA 適應症）
+- 是否需考慮手術評估
+
+## 🎯 治療目標
+說明短期、長期目標及預期改善的共病。
+
+## 📋 追蹤計畫
+追蹤頻率、監測項目、跨科轉介建議。
+
+## 📝 臨床備註
+整合醫師備註，提出特別注意事項。
+
+請確保摘要簡潔、專業，適合病歷記錄使用。如果某些欄位資料不足，請根據已有資料合理推斷並標注「（待確認）」。`;
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      const result = await response.json();
+      const text = result.content?.map(b => b.text || '').join('') || '無法生成摘要';
+      lastSummaryText = text;
+      renderSummary(text);
+      copyBtn.style.display = 'block';
+    } catch (err) {
+      content.innerHTML = `<div class="summary-placeholder" style="color:#e07070">⚠️ 生成失敗：${err.message}<br><br>請確認網路連線後再試。</div>`;
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<span>✨</span> 重新產生摘要';
+    }
+  }
+
+  function renderSummary(text) {
+    const content = document.getElementById('summaryContent');
+
+    // Convert markdown-like text to HTML
+    let html = text
+      .replace(/^## (.+)$/gm, '<h3>$1</h3>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong style="color:#d4e8f4">$1</strong>')
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/^(?!<[hul])(.+)$/gm, '<p>$1</p>')
+      .replace(/<p><\/p>/g, '');
+
+    // Wrap in ai-summary class
+    content.innerHTML = `<div class="ai-summary">${html}</div>`;
+  }
+
+  function copySummary() {
+    if (!lastSummaryText) return;
+    navigator.clipboard.writeText(lastSummaryText).then(() => {
+      const btn = document.getElementById('copySummaryBtn');
+      btn.textContent = '✓ 已複製';
+      setTimeout(() => btn.textContent = '📋 複製摘要文字', 2000);
+    });
+  }
+
+  // ── Email / Copy form ──────────────────────────────────────────────────────
+  function buildEmailBody() {
+    const d = collectFormData();
+    const lines = [];
+    const add = (k, v='') => lines.push(v ? `${k}：${v}` : k);
+    add('【成人肥胖臨床評估與治療表單】');
+    add('');
+    add('一、基本資料');
+    add('姓名', d.patient.name); add('病歷號', d.patient.chart);
+    add('日期', d.patient.date); add('醫師', d.patient.doctor);
+    add('年齡', d.patient.age); add('性別', d.patient.gender);
+    add('');
+    add('二、人體測量');
+    add('身高', d.anthropometry.height+'cm'); add('體重', d.anthropometry.weight+'kg');
+    add('BMI', d.anthropometry.bmi); add('腰圍', d.anthropometry.waist+'cm');
+    add('BMI分類', d.anthropometry.bmiCategory);
+    add('腹部肥胖', d.anthropometry.waistStatus);
+    add('');
+    add('三、共病');
+    add('相關共病', d.history.comorbidities);
+    add('體重因素', d.history.weightFactors);
+    add('EOSS分期', d.history.eoss);
+    add('');
+    add('四、生活型態');
+    add('飲食型態', d.lifestyle.diet);
+    add('身體活動', d.lifestyle.activity);
+    add('動機', d.lifestyle.motivation);
+    add('');
+    add('五、檢驗');
+    add('血糖/HbA1c', `${d.labs.sugar}/${d.labs.hba1c}`);
+    add('血脂', `TG:${d.labs.tg} HDL:${d.labs.hdl} LDL:${d.labs.ldl}`);
+    add('');
+    add('六、治療');
+    add('適應症', d.treatment.indications);
+    add('生活型態處方', d.treatment.lifestyleRx);
+    add('藥物', d.treatment.medications);
+    add('手術', d.treatment.procedures);
+    add('');
+    add('七、目標');
+    add('目標', d.goals.selected);
+    add('短期', d.goals.shortTerm); add('長期', d.goals.longTerm);
+    add('');
+    add('八、追蹤');
+    add('頻率', d.followup.frequency);
+    add('轉介', d.followup.referrals);
+    add('備註', d.followup.note);
+    return lines.join('\n');
+  }
+
+  function copyFormToClipboard() {
+    navigator.clipboard.writeText(buildEmailBody()).then(() => {
+      const msg = document.getElementById('submitStatus');
+      msg.textContent = '✓ 已複製'; msg.style.display = 'inline-block';
+      setTimeout(() => msg.style.display = 'none', 2000);
+    });
+  }
+
+  function submitByEmail() {
+    const name = val('patientName') || '未命名個案';
+    const subject = `成人肥胖臨床評估與治療表單 - ${name}`;
+    const to = 'jimmy603@ms3.hinet.net';
+    const cc = 'edmaster@cgmh.org.tw,cgmhim@cgmh.org.tw';
+    window.location.href = `mailto:${encodeURIComponent(to)}?cc=${encodeURIComponent(cc)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(buildEmailBody())}`;
+    const msg = document.getElementById('submitStatus');
+    msg.textContent = '✓ 送出完成'; msg.style.display = 'inline-block';
+    setTimeout(() => msg.style.display = 'none', 3000);
+  }
+</script>
+</body>
+</html>
